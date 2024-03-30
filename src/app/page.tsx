@@ -12,9 +12,15 @@ export default async function Home() {
     redirect("/unauthenticated");
   }
 
+  const { data, error, status, count} = await supabase.from("test_items").select("*");
+
   return (
     <>
       <h1>Hello, {session.user.email}</h1>
+      <div>status: {status}</div>
+      <div>count: {data?.length}</div>
+
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </>
   );
 }
