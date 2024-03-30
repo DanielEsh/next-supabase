@@ -2,6 +2,7 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
+import {ClientUser} from "@/components/client-user";
 
 export default function Login() {
   const router = useRouter();
@@ -36,6 +37,7 @@ export default function Login() {
       <button onClick={handleSignUp}>Sign up</button>
       <button onClick={handleSignIn}>Sign in</button>
       <button onClick={handleSignOut}>Sign out</button>
+      <ClientUser />
     </div>
   );
 }
