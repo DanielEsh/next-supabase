@@ -2,6 +2,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import {ClientUser} from "@/components/client-user";
+import {Permissions} from "@/components/Permissions";
 
 export default async function Home() {
   const supabase = createServerComponentClient<Database>({ cookies });
@@ -30,6 +31,8 @@ export default async function Home() {
         USER
         <pre>{JSON.stringify(user, null, 2)}</pre>
       <pre>{JSON.stringify(data, null, 2)}</pre>
+
+        <Permissions />
     </>
   );
 }
