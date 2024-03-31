@@ -10,10 +10,13 @@ export default function Login() {
 
   const handleSignUp = async () => {
     await supabase.auth.signUp({
-      email: "jon@supabase.com",
-      password: "sup3rs3cur3",
+      email: "jon@supabase.com2",
+      password: "123123",
       options: {
-        emailRedirectTo: `${location.origin}/auth/callback`,
+        data: {
+          first_name: 'fname',
+          username: 'username',
+        },
       },
     });
     router.refresh();
@@ -37,7 +40,7 @@ export default function Login() {
       <button onClick={handleSignUp}>Sign up</button>
       <button onClick={handleSignIn}>Sign in</button>
       <button onClick={handleSignOut}>Sign out</button>
-      <ClientUser />
+      {/*<ClientUser />*/}
     </div>
   );
 }
