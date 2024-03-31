@@ -8,7 +8,7 @@ export const Permissions = () => {
     const [permissions, setPermissions] = useState([])
 
     const getPermissions = async () => {
-        const { data, error } = await supabase.from("permissions").select("*")
+        const { data, error } = await supabase.from("permission").select("*")
         setPermissions(data)
     }
 

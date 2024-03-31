@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import {ClientUser} from "@/components/client-user";
 import {Permissions} from "@/components/Permissions";
+import {Groups} from "@/components/Groups";
 
 export default async function Home() {
   const supabase = createServerComponentClient<Database>({ cookies });
@@ -33,6 +34,7 @@ export default async function Home() {
       <pre>{JSON.stringify(data, null, 2)}</pre>
 
         <Permissions />
+        <Groups />
     </>
   );
 }
