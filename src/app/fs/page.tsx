@@ -1,45 +1,38 @@
-'use client'
-
-import {ChangeEvent} from "react";
-import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
+import {createServerComponentClient} from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 
 export default async function FsPage() {
-    const supabase = createClientComponentClient()
-    const handleUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-        let file;
+    const supabase = createServerComponentClient({ cookies })
 
-        if (e.target.files) {
-            file = e.target.files[0];
-        }
 
-        const { data, error } = await supabase.storage
-            .from("images")
-            .upload("public/" + file?.name, file as File);
+    const { data, error } = await supabase
+        .storage
+        .from('images')
+        .list('public', {
+            limit: 100,
+            offset: 0,
+            sortBy: { column: 'name', order: 'asc' },
+        })
 
-        if (data) {
-            console.log(data);
-        } else if (error) {
-            console.log(error);
-        }
-    }
 
+    console.log('data', data)
+// https://hbnabwxbfbtsmfogbyth.supabase.co/storage/v1/object/public/images/public/storage-backet-img.jpg
 
     return (
         <div>
             <h1>FS PAGE</h1>
 
-            <div className="flex min-h-screen flex-col items-center justify-center py-2">
+            {data?.map(item => {
+                return (
+                    <div key={item.id}>
+                        <div className="w-[250px] h-[250px]">
+                            <img src={`https://hbnabwxbfbtsmfogbyth.supabase.co/storage/v1/object/public/images/public/${item.name}`} />
+                        </div>
+                    </div>
+                )
+            })}
 
-                <input
-                    type="file"
-                    accept="image/*"
-                    className="block w-auto text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                    id="file_input"
-                    onChange={(e) => {
-                        handleUpload(e);
-                    }}
-                />
-            </div>
+
         </div>
     )
 }
