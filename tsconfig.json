@@ -17,6 +17,10 @@
         "name": "next"
       }
     ],
+
+    /* Types */
+    "verbatimModuleSyntax": true,
+
     "paths": {
       "@/*": ["./src/*"]
     }
