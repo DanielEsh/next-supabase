@@ -28,17 +28,19 @@ export default async function Home() {
 
   return (
     <>
-      <h1>Hello, {session.user.email}</h1>
-      <div>status: {status}</div>
-      <div>count: {data?.length}</div>
-      {/*<ClientUser />*/}
-      <pre>{JSON.stringify(session, null, 2)}</pre>
-      USER
-      <pre>{JSON.stringify(user, null, 2)}</pre>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-      <Permissions />
-      <Groups />
-      <Users />
+      <div>
+          <h1>Hello, {session.user.email}</h1>
+          <div>status: {status}</div>
+          <div>count: {data?.length}</div>
+          {/*<ClientUser />*/}
+          <pre>{JSON.stringify(session, null, 2)}</pre>
+          USER
+          <pre>{JSON.stringify(user, null, 2)}</pre>
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+          <Permissions />
+          <Groups />
+          <Users />
+      </div>
     </>
   )
 }

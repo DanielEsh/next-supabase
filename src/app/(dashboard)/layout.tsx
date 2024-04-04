@@ -2,8 +2,8 @@ import type { ReactNode } from 'react'
 
 import { Inter } from 'next/font/google'
 
-import './globals.css'
-import Login from './login'
+import '../globals.css'
+import Login from '../../components/login'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -47,10 +47,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <div className="bg-neutral-950 flex-auto text-white px-10 py-8 rounded-lg">
                 <span>Breadcrumbs</span>
                 <h1 className="text-3xl">Workspace</h1>
+                {children}
             </div>
         </div>
-
-        {/*{children}*/}
       </body>
     </html>
   )
