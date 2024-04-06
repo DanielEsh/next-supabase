@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { Button, Input } from '@/shared/ui'
 
 export default function LoginPage() {
@@ -23,9 +25,12 @@ export default function LoginPage() {
               <span className="text-foreground-light">
                 Don&apos;t have an account? {''}
               </span>
-              <a className="underline transition text-foreground hover:text-foreground-light">
+              <Link
+                href="/sign-up"
+                className="underline transition text-foreground hover:text-foreground-light"
+              >
                 Sign Up Now
-              </a>
+              </Link>
             </div>
           </div>
         </div>
