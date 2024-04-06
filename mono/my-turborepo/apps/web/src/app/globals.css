@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  /*color: rgb(var(--foreground-rgb));*/
+  /*background: linear-gradient(*/
+  /*    to bottom,*/
+  /*    transparent,*/
+  /*    rgb(var(--background-end-rgb))*/
+  /*  )*/
+  /*  rgb(var(--background-start-rgb));*/
+
+  min-height: 100vh;
+}
+
+.bg-alternative {
+  --colors-gray-dark-100: 0deg 0% 8.6%;
+  --background-alternative-default: var(--colors-gray-dark-100);
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--background-alternative-default) / var(--tw-bg-opacity));
+}
+
+.bg-studio {
+  --background-200: 0deg 0% 11%;
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--background-200) / var(--tw-bg-opacity));
+}
+
+.text-foreground-light {
+  --colors-gray-dark-1100: 0deg 0% 62.7%;
+  --foreground-light: var(--colors-gray-dark-1100);
+
+  --tw-text-opacity: 1;
+  color: hsl(var(--foreground-light) / var(--tw-text-opacity));
+}
