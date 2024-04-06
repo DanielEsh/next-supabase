@@ -1,5 +1,5 @@
 import '@trivago/prettier-plugin-sort-imports'
-import * as tailwindcssPlugin from 'prettier-plugin-tailwindcss'
+import 'prettier-plugin-tailwindcss'
 
 export default {
   tabWidth: 2,
@@ -10,7 +10,7 @@ export default {
   trailingComma: 'all',
   endOfLine: 'auto',
 
-  plugins: [tailwindcssPlugin, '@trivago/prettier-plugin-sort-imports'],
+  plugins: ['prettier-plugin-tailwindcss', '@trivago/prettier-plugin-sort-imports'],
 
   // sort order
   importOrder: [

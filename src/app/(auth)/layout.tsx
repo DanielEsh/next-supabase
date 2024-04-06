@@ -1,14 +1,12 @@
-import type {ReactNode} from "react";
+import type { ReactNode } from 'react'
+
+import GlobalLayout from '@/app/global-layout'
 
 export default function LoginLayout({ children }: { children: ReactNode }) {
-    return (
-        <html lang="en">
-            <body className="bg-red-500">
-                <div>Auth layout</div>
-                <div>
-                    {children}
-                </div>
-            </body>
-        </html>
-    )
+  return (
+    <GlobalLayout>
+      <div>Auth layout</div>
+      <div>{children}</div>
+    </GlobalLayout>
+  )
 }
