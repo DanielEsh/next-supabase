@@ -18,13 +18,13 @@ export class Supabase {
   ) {}
 
   getClient() {
-    this.logger.log('getting supabase client...');
+    // this.logger.log('getting supabase client...');
     if (this.clientInstance) {
-      this.logger.log('client exists - returning for current Scope.REQUEST');
+      // this.logger.log('client exists - returning for current Scope.REQUEST');
       return this.clientInstance;
     }
 
-    this.logger.log('initialising new supabase client for new Scope.REQUEST');
+    // this.logger.log('initialising new supabase client for new Scope.REQUEST');
 
     this.clientInstance = createClient(
       this.configService.get('SUPABASE_URL'),
@@ -40,7 +40,7 @@ export class Supabase {
     // this.clientInstance.auth.setAuth(
     //   ExtractJwt.fromAuthHeaderAsBearerToken()(this.request),
     // );
-    this.logger.log('auth has been set!');
+    // this.logger.log('auth has been set!');
 
     return this.clientInstance;
   }
