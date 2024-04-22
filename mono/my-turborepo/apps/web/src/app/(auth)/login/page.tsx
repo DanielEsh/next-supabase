@@ -7,21 +7,9 @@ import { z } from 'zod'
 import { Button, Input } from '@/shared/ui'
 import { Form, useForm } from '@/shared/ui/form'
 
-const slugRegex = new RegExp('^[a-z0-9]+(?:-[a-z0-9]+)*$')
-
 const loginFormSchema = z.object({
-  email: z
-    .string()
-    .nonempty({
-      message: 'Must be required',
-    })
-    .refine((value) => slugRegex.test(value), {
-      message: 'Invalid slug format',
-    }),
-  password: z.string().nonempty({
-    message: 'Must be required',
-  }),
-  description: z.string().optional(),
+  email: z.string().min(1),
+  password: z.string().min(8).max(32),
 })
 
 export type LoginForm = z.infer<typeof loginFormSchema>

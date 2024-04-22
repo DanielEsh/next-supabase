@@ -1,3 +1,5 @@
+'use client'
+
 import { Children, isValidElement, cloneElement } from 'react'
 import { Controller, useFormContext, type FieldValues } from 'react-hook-form'
 
