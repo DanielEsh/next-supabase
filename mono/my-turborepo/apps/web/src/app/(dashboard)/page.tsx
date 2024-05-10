@@ -1,3 +1,5 @@
+import { Tree } from '@repo/ui/tree'
+
 import { Login } from '@/app/(dashboard)/LoginBtn'
 
 export default async function HomePage() {
@@ -16,6 +18,8 @@ export default async function HomePage() {
           New folder
         </div>
       </div>
+
+      <Tree />
     </div>
   )
 }

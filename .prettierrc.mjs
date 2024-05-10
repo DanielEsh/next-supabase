@@ -10,6 +10,10 @@ export default {
   trailingComma: 'all',
   endOfLine: 'auto',
 
+  jsxSingleQuote: false,
+  jsxBracketSameLine: false,
+  arrowParens: "always",
+
   plugins: ['prettier-plugin-tailwindcss', '@trivago/prettier-plugin-sort-imports'],
 
   // sort order
