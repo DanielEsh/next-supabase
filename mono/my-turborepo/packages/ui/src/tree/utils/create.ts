@@ -47,6 +47,7 @@ function createTreeNodes<R, G, I>(
 
   rawNodes.forEach((rawNode, index) => {
     const treeNode: TreeNode<R, G, I> = Object.create({})
+    treeNode.key = rawNode.key
     treeNode.rawNode = rawNode
     treeNode.siblings = treeNodes
     treeNode.level = level
@@ -77,7 +78,7 @@ function createTreeNodes<R, G, I>(
   return treeNodes as any
 }
 
-export const create = () => {
+export const create = (nodes: any[]) => {
   console.log('create')
   const treeNodeMap = new Map()
   const levelTreeNodeMap = new Map()
@@ -85,7 +86,7 @@ export const create = () => {
   const rawNodes = createdData
 
   const treeNodes = createTreeNodes(
-    rawNodes,
+    nodes,
     treeNodeMap,
     levelTreeNodeMap,
     defaultGetChildren,
@@ -94,4 +95,5 @@ export const create = () => {
   console.log('TREE NODES', treeNodes)
   console.log('treeNodeMap', treeNodeMap)
   console.log('levelTreeNodeMap', levelTreeNodeMap)
+  return treeNodes
 }

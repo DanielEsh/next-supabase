@@ -5,11 +5,9 @@ import { useMemo, useState } from 'react'
 import { TreeNode } from './TreeNode'
 import { create } from './utils/create'
 import { flatten } from './utils/flatted'
-import { RawNode } from './utils/interface'
 
 export const Tree = () => {
   const [internalExpandedKeys, setInternalExpandedKeys] = useState([1])
-  create()
 
   const nodes: any[] = [
     {
@@ -32,7 +30,13 @@ export const Tree = () => {
     },
   ]
 
-  const flattedNodes = flatten(nodes, internalExpandedKeys)
+  const getCreatedTree = () => {
+    return create(nodes)
+  }
+
+  console.log('getCreatedTree', flatten(getCreatedTree(), internalExpandedKeys))
+
+  const flattedNodes = flatten(getCreatedTree(), internalExpandedKeys)
 
   console.log('flattedNodes', flattedNodes)
 
@@ -63,7 +67,7 @@ export const Tree = () => {
           level={node.level}
           onExpand={handleExpand}
         >
-          {node.label}
+          {node.rawNode.label}
         </TreeNode>
       ))}
 
