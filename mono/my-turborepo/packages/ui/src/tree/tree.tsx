@@ -7,21 +7,40 @@ import { flatten } from './utils/flatted'
 import { RawNode } from './utils/interface'
 
 export const Tree = () => {
-  const [internalExpandedKeys, setInternalExpandedKeys] = useState([])
+  const [internalExpandedKeys, setInternalExpandedKeys] = useState([1])
 
-  const nodes: RawNode[] = [
+  const nodes: any[] = [
     {
       key: 1,
+      label: 'Node 1',
+      level: 0,
       children: [
-        { key: 2, isLeaf: false },
-        { key: 3, isLeaf: false },
+        { key: 2, isLeaf: false, label: 'Node 1.1', level: 1 },
+        { key: 3, isLeaf: false, label: 'Node 1.2', level: 1 },
+        { key: 4, isLeaf: false, label: 'Node 1.3', level: 1 },
       ],
     },
   ]
 
-  const flattedNodes = useMemo(() => {
-    return flatten(nodes, internalExpandedKeys)
-  }, [internalExpandedKeys])
+  const flattedNodes = flatten(nodes, internalExpandedKeys)
+
+  console.log('flattedNodes', flattedNodes)
+
+  const handleExpand = (key: number) => {
+    // setInternalExpandedKeys((prevState) => [key, ...prevState])
+    const index = internalExpandedKeys.indexOf(key)
+    if (index === -1) {
+      // Если значение отсутствует в массиве, добавляем его
+      setInternalExpandedKeys((prevArray) => [...prevArray, key])
+    } else {
+      // Если значение уже присутствует в массиве, удаляем его
+      setInternalExpandedKeys((prevArray) =>
+        prevArray.filter((item) => item !== key),
+      )
+    }
+
+    console.log('INTERNAL', internalExpandedKeys)
+  }
 
   return (
     <div>
@@ -30,10 +49,11 @@ export const Tree = () => {
       {flattedNodes.map((node) => (
         <TreeNode
           key={node.key}
-          node={node.rawNode}
+          node={node}
           level={node.level}
+          onExpand={handleExpand}
         >
-          label
+          {node.label}
         </TreeNode>
       ))}
 

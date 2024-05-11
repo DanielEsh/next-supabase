@@ -1,4 +1,4 @@
-import { Key, TreeNode } from './interface'
+import { Key, LevelTreeNodeMap, TreeNode, TreeNodeMap } from './interface'
 
 export function flatten<R, G, I>(
   treeNodes: Array<TreeNode<R, G, I>>,

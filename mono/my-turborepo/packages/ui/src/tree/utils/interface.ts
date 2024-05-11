@@ -8,6 +8,11 @@ export interface RawNode {
   [key: string]: unknown
 }
 
+export interface GetPrevNextOptions {
+  loop?: boolean
+  includeDisabled?: boolean
+}
+
 // R=RawNode, G=GroupNode, I=IgnoredNode
 export interface TreeNode<R = RawNode, G = R, I = R> {
   key: Key
@@ -30,3 +35,6 @@ export interface TreeNode<R = RawNode, G = R, I = R> {
   getChild: () => TreeNode<R> | null
   contains: (treeNode: TreeNode<R, G, I> | null | undefined) => boolean
 }
+
+export type TreeNodeMap<R, G, I> = Map<Key, TreeNode<R, G, I>>
+export type LevelTreeNodeMap<R, G, I> = Map<number, Array<TreeNode<R, G, I>>>
