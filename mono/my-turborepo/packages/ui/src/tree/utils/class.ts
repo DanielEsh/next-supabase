@@ -4,7 +4,7 @@ import {
   LevelTreeNodeMap,
   TreeNodeMap,
 } from './create'
-import { TreeNode } from './interface'
+import { Key, TreeNode } from './interface'
 
 export class DataTree {
   treeNodeMap = new Map()
@@ -66,5 +66,14 @@ export class DataTree {
     })
 
     return treeNodes as any
+  }
+
+  getNode(key: Key | null | undefined) {
+    if (key === null || key === undefined) return null
+    const tmNode = this.treeNodeMap.get(key)
+    if (tmNode && !tmNode.isGroup && !tmNode.ignored) {
+      return tmNode
+    }
+    return null
   }
 }

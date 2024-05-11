@@ -7,6 +7,8 @@ import { DataTree } from './utils/class'
 import { create } from './utils/create'
 import { flatten } from './utils/flatted'
 
+const tree = new DataTree()
+
 export const Tree = () => {
   const [internalExpandedKeys, setInternalExpandedKeys] = useState([1])
 
@@ -32,7 +34,7 @@ export const Tree = () => {
   ]
 
   const getCreatedTree = () => {
-    return new DataTree().init(nodes)
+    return tree.init(nodes)
   }
 
   console.log('getCreatedTree', flatten(getCreatedTree(), internalExpandedKeys))
@@ -59,6 +61,7 @@ export const Tree = () => {
 
   const handleClick = (key: any) => {
     console.log('click', key)
+    console.log('GET NODE', tree.getNode(key))
   }
 
   return (
