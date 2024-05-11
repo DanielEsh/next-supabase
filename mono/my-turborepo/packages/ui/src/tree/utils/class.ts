@@ -76,4 +76,8 @@ export class DataTree {
     }
     return null
   }
+
+  getParent(key: Key | null | undefined) {
+    return this.getNode(key).parent ?? null
+  }
 }

@@ -39,7 +39,9 @@ export const Tree = () => {
 
   console.log('getCreatedTree', flatten(getCreatedTree(), internalExpandedKeys))
 
-  const flattedNodes = flatten(getCreatedTree(), internalExpandedKeys)
+  const flattedNodes = useMemo(() => {
+    return flatten(getCreatedTree(), internalExpandedKeys)
+  }, [internalExpandedKeys])
 
   console.log('flattedNodes', flattedNodes)
 
@@ -62,6 +64,7 @@ export const Tree = () => {
   const handleClick = (key: any) => {
     console.log('click', key)
     console.log('GET NODE', tree.getNode(key))
+    console.log('GET PARENT', tree.getParent(key))
   }
 
   return (
