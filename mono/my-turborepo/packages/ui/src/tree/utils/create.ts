@@ -78,6 +78,8 @@ function createTreeNodes<R, G, I>(
   return treeNodes as any
 }
 
+let tempStore =
+
 export const create = (nodes: any[]) => {
   console.log('create')
   const treeNodeMap = new Map()
@@ -91,6 +93,8 @@ export const create = (nodes: any[]) => {
     levelTreeNodeMap,
     defaultGetChildren,
   )
+
+  tempStore = treeNodes
 
   console.log('TREE NODES', treeNodes)
   console.log('treeNodeMap', treeNodeMap)

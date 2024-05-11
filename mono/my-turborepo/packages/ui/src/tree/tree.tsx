@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 
 import { TreeNode } from './TreeNode'
+import { DataTree } from './utils/class'
 import { create } from './utils/create'
 import { flatten } from './utils/flatted'
 
@@ -31,7 +32,7 @@ export const Tree = () => {
   ]
 
   const getCreatedTree = () => {
-    return create(nodes)
+    return new DataTree().init(nodes)
   }
 
   console.log('getCreatedTree', flatten(getCreatedTree(), internalExpandedKeys))
@@ -56,6 +57,10 @@ export const Tree = () => {
     console.log('INTERNAL', internalExpandedKeys)
   }
 
+  const handleClick = (key: any) => {
+    console.log('click', key)
+  }
+
   return (
     <div>
       <span>Tree Component from UI Kit</span>
@@ -65,6 +70,7 @@ export const Tree = () => {
           key={node.key}
           node={node}
           level={node.level}
+          onClick={handleClick}
           onExpand={handleExpand}
         >
           {node.rawNode.label}
