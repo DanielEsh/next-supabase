@@ -87,6 +87,7 @@ export const Tree = () => {
           key={node.key}
           node={node}
           level={node.level}
+          leaf={node.isLeaf}
           expanded={internalExpandedKeys.includes(node.key)}
           onClick={handleClick}
           onExpand={handleExpand}
