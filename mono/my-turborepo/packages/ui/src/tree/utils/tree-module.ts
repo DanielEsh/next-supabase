@@ -1,5 +1,5 @@
 import { GetChildren } from './create'
-import { ITreeNode, TreeNode } from './interface'
+import { ITreeNode, Key, TreeNode } from './interface'
 
 const treeNodeMap = new Map()
 const levelTreeNodeMap = new Map()
@@ -59,4 +59,27 @@ export function createTree(nodes: any[]) {
 
   console.log('RESULT', treeNodes)
   return treeNodes
+}
+
+export function getFlattenedRenderTree(
+  treeNodes: ITreeNode[],
+  expandedKeys?: Key[],
+) {
+  const expandedKeySet = expandedKeys ? new Set<Key>(expandedKeys) : undefined
+  const flattenedNodes: ITreeNode[] = []
+  function traverse(treeNodes: ITreeNode[]) {
+    treeNodes.forEach((treeNode) => {
+      flattenedNodes.push(treeNode)
+      if (treeNode.isLeaf || !treeNode.children) return
+      if (
+        // normal non-leaf node
+        expandedKeySet === undefined ||
+        expandedKeySet.has(treeNode.key)
+      ) {
+        traverse(treeNode.children)
+      }
+    })
+  }
+  traverse(treeNodes)
+  return flattenedNodes
 }

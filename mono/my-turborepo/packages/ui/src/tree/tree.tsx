@@ -6,7 +6,7 @@ import { TreeNode } from './TreeNode'
 import { DataTree } from './utils/class'
 import { create } from './utils/create'
 import { flatten } from './utils/flatted'
-import { createTree } from './utils/tree-module'
+import { createTree, getFlattenedRenderTree } from './utils/tree-module'
 
 const tree = new DataTree()
 
@@ -42,10 +42,14 @@ export const Tree = () => {
   console.log('RES [create]', createTree(nodes))
 
   const flattedNodes = useMemo(() => {
-    return flatten(getCreatedTree(), internalExpandedKeys)
+    return getFlattenedRenderTree(createTree(nodes), internalExpandedKeys)
   }, [internalExpandedKeys])
 
   console.log('flattedNodes', flattedNodes)
+  console.log(
+    'RES [flatted]',
+    getFlattenedRenderTree(createTree(nodes), [1, 2]),
+  )
 
   const handleExpand = (key: number) => {
     // setInternalExpandedKeys((prevState) => [key, ...prevState])
@@ -82,7 +86,7 @@ export const Tree = () => {
           onClick={handleClick}
           onExpand={handleExpand}
         >
-          {node.rawNode.label}
+          {node.originalData.label}
         </TreeNode>
       ))}
 
