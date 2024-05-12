@@ -46,10 +46,12 @@ export class DataTree {
       treeNode.isFirstChild = index === 0
       treeNode.isLastChild = index + 1 === rawNodes.length
       treeNode.parent = parent
+      treeNode.isLeaf = true
 
       if (!treeNode.ignored) {
         const rawChildren = getChildren(rawNode as R | G)
         if (Array.isArray(rawChildren)) {
+          treeNode.isLeaf = false
           treeNode.children = this.createDataTreeNodes<R, G, I>(
             rawChildren,
             getChildren,

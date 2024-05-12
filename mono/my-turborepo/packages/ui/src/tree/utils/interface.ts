@@ -38,3 +38,19 @@ export interface TreeNode<R = RawNode, G = R, I = R> {
 
 export type TreeNodeMap<R, G, I> = Map<Key, TreeNode<R, G, I>>
 export type LevelTreeNodeMap<R, G, I> = Map<number, Array<TreeNode<R, G, I>>>
+
+export type TreeNodeKey = string | number
+
+interface OriginalData {
+  [key: string]: unknown
+}
+
+export interface ITreeNode {
+  key: TreeNodeKey
+  index: number
+  level: number
+  isLeaf: boolean
+  children: Array<ITreeNode>
+  parentKey: TreeNodeKey
+  originalData: OriginalData
+}

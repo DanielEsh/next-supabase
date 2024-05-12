@@ -6,6 +6,7 @@ export interface TreeNodeProps {
   node?: NodeItem
   level: number
   children: ReactNode
+  expanded?: boolean
   onClick: (key: any) => void
   onExpand?: (key: number | string) => void
 }
@@ -14,19 +15,25 @@ const DEFAULT_INDENT = 4
 const INDENT_MULTIPLIER = 20
 
 export const TreeNode = (props: TreeNodeProps) => {
-  const { node, level, children, onClick, onExpand } = props
+  const { node, level, expanded, children, onClick, onExpand } = props
 
   const getStyles = () => ({
     paddingLeft: `${level * INDENT_MULTIPLIER || DEFAULT_INDENT}px`,
   })
 
+  const handleClick = () => {
+    onClick(node?.key)
+    onExpand(node?.key)
+  }
+
   return (
-    <div
+    <button
       style={getStyles()}
-      onClick={() => onClick(node?.key)}
+      className="flex gap-3"
+      onClick={handleClick}
     >
-      <button onClick={() => onExpand(node?.key)}>expand</button>
+      <span>{expanded ? 'expanded' : 'expand'}</span>
       <span className="tree node">{children}</span>
-    </div>
+    </button>
   )
 }
