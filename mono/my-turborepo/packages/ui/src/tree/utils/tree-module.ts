@@ -83,3 +83,12 @@ export function getFlattenedRenderTree(
   traverse(treeNodes)
   return flattenedNodes
 }
+
+export function getNode(key: Key) {
+  return treeNodeMap.get(key) ?? null
+}
+
+export function getParent(key: Key) {
+  const parentKey = getNode(key).parentKey
+  return getNode(parentKey) ?? null
+}

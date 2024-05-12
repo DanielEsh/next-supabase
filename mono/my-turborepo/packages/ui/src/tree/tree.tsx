@@ -6,7 +6,12 @@ import { TreeNode } from './TreeNode'
 import { DataTree } from './utils/class'
 import { create } from './utils/create'
 import { flatten } from './utils/flatted'
-import { createTree, getFlattenedRenderTree } from './utils/tree-module'
+import {
+  createTree,
+  getFlattenedRenderTree,
+  getNode,
+  getParent,
+} from './utils/tree-module'
 
 const tree = new DataTree()
 
@@ -69,8 +74,8 @@ export const Tree = () => {
 
   const handleClick = (key: any) => {
     console.log('click', key)
-    console.log('GET NODE', tree.getNode(key))
-    console.log('GET PARENT', tree.getParent(key))
+    console.log('GET NODE', getNode(key))
+    console.log('GET PARENT', getParent(key))
   }
 
   return (
