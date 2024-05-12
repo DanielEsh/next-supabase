@@ -6,6 +6,7 @@ import { TreeNode } from './TreeNode'
 import { DataTree } from './utils/class'
 import { create } from './utils/create'
 import { flatten } from './utils/flatted'
+import { createTree } from './utils/tree-module'
 
 const tree = new DataTree()
 
@@ -37,7 +38,8 @@ export const Tree = () => {
     return tree.init(nodes)
   }
 
-  console.log('getCreatedTree', flatten(getCreatedTree(), internalExpandedKeys))
+  console.log('getCreatedTree', getCreatedTree())
+  console.log('RES [create]', createTree(nodes))
 
   const flattedNodes = useMemo(() => {
     return flatten(getCreatedTree(), internalExpandedKeys)
