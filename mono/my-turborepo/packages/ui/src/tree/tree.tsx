@@ -1,7 +1,9 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 
+import { Input } from '../input'
 import { TreeNode } from './TreeNode'
 import { DataTree } from './utils/class'
 import { create } from './utils/create'
@@ -15,8 +17,22 @@ import {
 
 const tree = new DataTree()
 
+interface CreateFormInputs {
+  formKey: string
+  formLabel: string
+}
+
 export const Tree = () => {
   const [internalExpandedKeys, setInternalExpandedKeys] = useState([1])
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<CreateFormInputs>()
+  const onSubmit: SubmitHandler<CreateFormInputs> = (data) => {
+    console.log(data)
+  }
 
   const nodes: any[] = [
     {
@@ -81,6 +97,36 @@ export const Tree = () => {
   return (
     <div>
       <span>Tree Component from UI Kit</span>
+
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <h2>Created Form</h2>
+
+        <Controller
+          name="formKey"
+          control={control}
+          defaultValue={''}
+          render={({ field: { value, onChange } }) => (
+            <Input
+              label="formLabel"
+              value={value}
+              onChange={onChange}
+            />
+          )}
+        />
+
+        <Controller
+          name="formLabel"
+          control={control}
+          defaultValue={''}
+          render={({ field: { value, onChange } }) => (
+            <Input
+              label="formLabel"
+              value={value}
+              onChange={onChange}
+            />
+          )}
+        />
+      </form>
 
       {flattedNodes.map((node) => (
         <TreeNode

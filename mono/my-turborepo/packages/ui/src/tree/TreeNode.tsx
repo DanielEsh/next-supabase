@@ -41,6 +41,7 @@ export const TreeNode = (props: TreeNodeProps) => {
     >
       {!leaf && <span className={iconClasses}>{<TreeIcon />}</span>}
       <span className="tree node">{children}</span>
+      <span>key: {node?.key}</span>
     </button>
   )
 }
