@@ -7,10 +7,18 @@ export class AppController {
 
   @Get()
   async getHello() {
-    const { data } = await this.supabase.getClient().from('group').select(`
-                name,
-                permissions:permission!group_permission(id, name)
-  `);
-    return data;
+    //   const { data } = await this.supabase.getClient().from('group').select(`
+    //               name,
+    //               permissions:permission!group_permission(id, name)
+    // `);
+
+    // return data;
+
+    return [
+      {
+        id: 1,
+        name: 'Node 1',
+      },
+    ];
   }
 }

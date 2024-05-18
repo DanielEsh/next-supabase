@@ -12,10 +12,10 @@ import { SupabaseGuard } from './supabase/supabase.guard';
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: SupabaseGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: SupabaseGuard,
+    // },
   ],
 })
 export class AppModule {}
