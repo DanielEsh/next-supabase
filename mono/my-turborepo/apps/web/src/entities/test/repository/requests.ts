@@ -9,3 +9,9 @@ export const getUsers = async (): Promise<UserDto[]> => {
 
   return response.data
 }
+
+export const getTree = async () => {
+  const response = await $api.get('/')
+
+  return response.data
+}
