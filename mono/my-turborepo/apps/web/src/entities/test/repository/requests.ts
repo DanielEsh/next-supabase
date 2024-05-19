@@ -15,3 +15,9 @@ export const getTree = async () => {
 
   return response.data
 }
+
+export const getTreeChildren = async (id: number) => {
+  const response = await $api.get(`${id}/children`)
+
+  return response.data
+}

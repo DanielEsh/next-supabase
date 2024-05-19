@@ -1,79 +1,19 @@
-/**
- * ! Example for use react query on client component
- */
 'use client'
 
 import { TreeNode } from '@repo/ui/tree'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { ReactQuery } from '@/components/ReactQuery'
-import { useTree } from '@/entities/test/use-tree'
-
-/**
- * ! Example for use react query on client component
- */
-
-/**
- * ! Example for use react query on client component
- */
-
-/**
- * ! Example for use react query on client component
- */
-
-/**
- * ! Example for use react query on client component
- */
-
-/**
- * ! Example for use react query on client component
- */
-
-/**
- * ! Example for use react query on client component
- */
-
-/**
- * ! Example for use react query on client component
- */
-
-/**
- * ! Example for use react query on client component
- */
-
-/**
- * ! Example for use react query on client component
- */
-
-/**
- * ! Example for use react query on client component
- */
-
-/**
- * ! Example for use react query on client component
- */
-
-/**
- * ! Example for use react query on client component
- */
-
-/**
- * ! Example for use react query on client component
- */
-
-/**
- * ! Example for use react query on client component
- */
-
-/**
- * ! Example for use react query on client component
- */
-
-/**
- * ! Example for use react query on client component
- */
+import { getTreeChildren } from '@/entities/test/repository/requests'
+import {
+  getTreeChildrenKey,
+  useTree,
+  useTreeChildren,
+} from '@/entities/test/use-tree'
 
 const ClientPage = () => {
   const usersQuery = useTree()
+  const queryClient = useQueryClient()
 
   return (
     <div>
@@ -83,8 +23,14 @@ const ClientPage = () => {
         queryResult={usersQuery}
         renderLoading={<p>Getting users data...</p>}
         render={(tree) => {
-          const handleClick = () => {
-            console.log('click')
+          const handleClick = async (key) => {
+            console.log('KEY', key)
+            const data = await queryClient.fetchQuery({
+              queryKey: getTreeChildrenKey(key),
+              queryFn: () => getTreeChildren(key),
+            })
+
+            console.log('DATA', data)
           }
 
           const handleExpand = () => {
@@ -102,7 +48,7 @@ const ClientPage = () => {
                     key={item.id}
                     level={0}
                     leaf={item.leaf}
-                    onClick={handleClick}
+                    onClick={() => handleClick(item.id)}
                     onExpand={handleExpand}
                   >
                     {item.name}
