@@ -23,12 +23,10 @@ const ClientPage = () => {
         queryResult={usersQuery}
         renderLoading={<p>Getting users data...</p>}
         render={(tree) => {
-          console.log(
-            'CREATED TREE',
-            createTree(tree, {
-              getKey: (node) => node.id,
-            }),
-          )
+          const createdTree = createTree(tree, {
+            getKey: (node) => node.id,
+            getLeaf: (node) => node.leaf,
+          })
 
           const handleClick = async (key) => {
             console.log('KEY', key)
@@ -49,16 +47,16 @@ const ClientPage = () => {
               <pre>
                 <code>{JSON.stringify(tree, null, 2)}</code>
               </pre>
-              {tree.map((item) => {
+              {createdTree.map((item) => {
                 return (
                   <TreeNode
-                    key={item.id}
+                    key={item.key}
                     level={0}
-                    leaf={item.leaf}
-                    onClick={() => handleClick(item.id)}
+                    leaf={item.isLeaf}
+                    onClick={() => handleClick(item.key)}
                     onExpand={handleExpand}
                   >
-                    {item.name}
+                    {item.originalData.name}
                   </TreeNode>
                 )
               })}

@@ -8,6 +8,7 @@ interface CreateTreeNodeOptions {
   nodes: any[]
   getChildren: GetChildren<any, any, any>
   getKey: any
+  getLeaf: any
   parent?: ITreeNode | null
   level?: number
 }
@@ -22,8 +23,19 @@ export function defaultGetKey(node: unknown): Key {
   return (node as any).key
 }
 
+export function getDefaultLeaf(node: unknown): Key {
+  return (node as any).isLeaf
+}
+
 function createTreeNode(options: CreateTreeNodeOptions) {
-  const { nodes, getChildren, getKey, parent = null, level = 0 } = options
+  const {
+    nodes,
+    getChildren,
+    getKey,
+    getLeaf,
+    parent = null,
+    level = 0,
+  } = options
 
   return nodes.map((node, index) => {
     const treeNode = {} as ITreeNode
@@ -34,9 +46,9 @@ function createTreeNode(options: CreateTreeNodeOptions) {
     treeNode.level = level
     treeNode.index = index
     treeNode.parentKey = parent?.key ?? null
-    treeNode.isLeaf = true
+    treeNode.isLeaf = getLeaf(node)
 
-    if (Array.isArray(rawChildren)) {
+    if (!treeNode.isLeaf && Array.isArray(rawChildren)) {
       treeNode.isLeaf = false
       treeNode.children = createTreeNode({
         nodes: rawChildren,
@@ -59,6 +71,7 @@ function createTreeNode(options: CreateTreeNodeOptions) {
 interface Options {
   getKey: any
   getChildren: any
+  getLeaf: any
 }
 
 export function createTree(nodes: any[], options: Options) {
@@ -66,6 +79,7 @@ export function createTree(nodes: any[], options: Options) {
     nodes,
     getChildren: defaultGetChildren,
     getKey: options.getKey ?? defaultGetKey,
+    getLeaf: options.getLeaf ?? getDefaultLeaf,
   })
 
   console.log('RESULT', treeNodes)
