@@ -1,6 +1,6 @@
 'use client'
 
-import { TreeNode } from '@repo/ui/tree'
+import { TreeNode, createTree } from '@repo/ui/tree'
 import { useQueryClient } from '@tanstack/react-query'
 
 import { ReactQuery } from '@/components/ReactQuery'
@@ -23,6 +23,13 @@ const ClientPage = () => {
         queryResult={usersQuery}
         renderLoading={<p>Getting users data...</p>}
         render={(tree) => {
+          console.log(
+            'CREATED TREE',
+            createTree(tree, {
+              getKey: (node) => node.id,
+            }),
+          )
+
           const handleClick = async (key) => {
             console.log('KEY', key)
             const data = await queryClient.fetchQuery({
