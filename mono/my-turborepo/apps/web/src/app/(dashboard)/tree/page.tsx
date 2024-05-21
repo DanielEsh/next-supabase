@@ -1,6 +1,8 @@
 'use client'
 
-import { TreeNode, createTree } from '@repo/ui/tree'
+import { useState } from 'react'
+
+import { TreeNode, createTree, getNode } from '@repo/ui/tree'
 import { useQueryClient } from '@tanstack/react-query'
 
 import { ReactQuery } from '@/components/ReactQuery'
@@ -23,19 +25,48 @@ const ClientPage = () => {
         queryResult={usersQuery}
         renderLoading={<p>Getting users data...</p>}
         render={(tree) => {
-          const createdTree = createTree(tree, {
-            getKey: (node) => node.id,
+          const transformData = (data) => {
+            return data.map((item) => {
+              return {
+                key: item.id,
+                leaf: item.leaf || false,
+                name: item.name,
+                data: item,
+                children: [],
+              }
+            })
+          }
+
+          const transformedData = tree.map((item) => {
+            return {
+              key: item.id,
+              leaf: item.leaf || false,
+              name: item.name,
+              data: item,
+              children: [],
+            }
+          })
+
+          const createdTree = createTree(transformedData, {
             getLeaf: (node) => node.leaf,
           })
 
           const handleClick = async (key) => {
             console.log('KEY', key)
+            const parentNode = getNode(key)
             const data = await queryClient.fetchQuery({
               queryKey: getTreeChildrenKey(key),
               queryFn: () => getTreeChildren(key),
             })
 
-            console.log('DATA', data)
+            const nestedChildren = transformData(data)
+
+            parentNode.isLeaf = false
+            parentNode.children = createTree(nestedChildren, {
+              parent: parentNode,
+              getKey: (node) => node.id,
+              getLeaf: (node) => node.leaf,
+            })
           }
 
           const handleExpand = () => {
@@ -45,7 +76,7 @@ const ClientPage = () => {
           return (
             <>
               <pre>
-                <code>{JSON.stringify(tree, null, 2)}</code>
+                <code>{JSON.stringify(createdTree, null, 2)}</code>
               </pre>
               {createdTree.map((item) => {
                 return (

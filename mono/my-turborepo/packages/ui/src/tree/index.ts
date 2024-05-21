@@ -1,3 +1,3 @@
 export { Tree } from './tree'
 export { TreeNode } from './TreeNode'
-export { createTree } from './utils/tree-module'
+export { createTree, getNode } from './utils/tree-module'
