@@ -1,8 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
-import { TreeNode, createTree, getNode } from '@repo/ui/tree'
+import {
+  TreeNode,
+  createTree,
+  getNode,
+  getFlattenedRenderTree,
+} from '@repo/ui/tree'
 import { useQueryClient } from '@tanstack/react-query'
 
 import { ReactQuery } from '@/components/ReactQuery'
@@ -25,13 +30,16 @@ const ClientPage = () => {
         queryResult={usersQuery}
         renderLoading={<p>Getting users data...</p>}
         render={(tree) => {
+          const [actualNodes, setActualNodes] = useState([])
+          const [expandedKeys, setExpandedKeys] = useState([])
           const transformData = (data) => {
             return data.map((item) => {
               return {
                 key: item.id,
                 leaf: item.leaf || false,
                 name: item.name,
-                data: item,
+                originalData: item,
+                level: 1,
                 children: [],
               }
             })
@@ -42,10 +50,15 @@ const ClientPage = () => {
               key: item.id,
               leaf: item.leaf || false,
               name: item.name,
-              data: item,
+              originalData: item,
+              level: 0,
               children: [],
             }
           })
+
+          useEffect(() => {
+            setActualNodes(transformedData)
+          }, [])
 
           const createdTree = createTree(transformedData, {
             getLeaf: (node) => node.leaf,
@@ -59,6 +72,10 @@ const ClientPage = () => {
               queryFn: () => getTreeChildren(key),
             })
 
+            setExpandedKeys((prevState) => {
+              return [...prevState, key]
+            })
+
             const nestedChildren = transformData(data)
 
             parentNode.isLeaf = false
@@ -67,27 +84,40 @@ const ClientPage = () => {
               getKey: (node) => node.id,
               getLeaf: (node) => node.leaf,
             })
+
+            setActualNodes((prevElements) => {
+              const newElements = [...prevElements]
+              const element = newElements[parentNode.index]
+
+              element.children = [...nestedChildren]
+
+              return newElements
+            })
           }
 
           const handleExpand = () => {
             console.log('expand')
           }
 
+          const flattedNodes = useMemo(() => {
+            return getFlattenedRenderTree(actualNodes, expandedKeys)
+          }, [actualNodes])
+
           return (
             <>
               <pre>
-                <code>{JSON.stringify(createdTree, null, 2)}</code>
+                <code>{JSON.stringify(actualNodes, null, 2)}</code>
               </pre>
-              {createdTree.map((item) => {
+              {flattedNodes.map((item) => {
                 return (
                   <TreeNode
                     key={item.key}
-                    level={0}
+                    level={item.level}
                     leaf={item.isLeaf}
                     onClick={() => handleClick(item.key)}
                     onExpand={handleExpand}
                   >
-                    {item.originalData.name}
+                    {item.originalData.name} {item.key}
                   </TreeNode>
                 )
               })}
