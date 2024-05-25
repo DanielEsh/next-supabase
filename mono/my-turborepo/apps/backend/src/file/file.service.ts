@@ -45,14 +45,34 @@ export class FileService {
   }
 
   async getChildren(id: number): Promise<FileDto[]> {
-    const parentNode = await this.fileEntityRepository.findOne({
-      where: {
-        id,
-      },
-      relations: ['children'],
-    });
+    const parentNode = await this.fileEntityRepository
+      .createQueryBuilder('file')
+      .leftJoinAndSelect('file.children', 'children')
+      .where('file.id = :id', { id })
+      .getOne();
+
+    if (parentNode) {
+      console.log('RES', await this.loadChildrenRecursively(parentNode));
+    }
 
     return parentNode ? this.transformFilesNodes(parentNode.children) : [];
+  }
+
+  async loadChildrenRecursively(node: FileEntity) {
+    if (node.children && node.children.length > 0) {
+      for (const child of node.children) {
+        const childNode = await this.fileEntityRepository
+          .createQueryBuilder('file')
+          .leftJoinAndSelect('file.children', 'children')
+          .where('file.id = :id', { id: child.id })
+          .getOne();
+
+        child.children = childNode ? childNode.children : [];
+        if (child.children.length > 0) {
+          await this.loadChildrenRecursively(child);
+        }
+      }
+    }
   }
 
   async getNode(id: number): Promise<FileEntity> {

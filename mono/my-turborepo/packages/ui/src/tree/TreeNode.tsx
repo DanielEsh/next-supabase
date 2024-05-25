@@ -35,6 +35,10 @@ export const TreeNode = (props: TreeNodeProps) => {
     'rotate-90': expanded,
   })
 
+  const classes = classNames({
+    'pl-3': !expanded && leaf,
+  })
+
   return (
     <li
       style={getStyles()}
@@ -48,8 +52,7 @@ export const TreeNode = (props: TreeNodeProps) => {
           {<TreeIcon />}
         </button>
       )}
-      <span className="tree node">{children}</span>
-      <span>key: {node?.key}</span>
+      <span className={classes}>{children}</span>
     </li>
   )
 }

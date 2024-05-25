@@ -67,6 +67,7 @@ const ClientPage = () => {
 
           const loadChildren = async (key: number) => {
             const parentNode = getNode(key)
+            console.log('PARENT NODE', parentNode)
 
             const data = await queryClient.fetchQuery({
               queryKey: getTreeChildrenKey(key),
@@ -98,9 +99,9 @@ const ClientPage = () => {
             })
           }
 
-          function collapseNode(keyIndex: number) {
+          function collapseNode(key: number) {
             setExpandedKeys((prevState) => {
-              return prevState.splice(keyIndex, 1)
+              return prevState.filter((item) => item !== key)
             })
           }
 
@@ -117,7 +118,7 @@ const ClientPage = () => {
             )
             const currentNode = getNode(key)
             if (expandedNodeKeyIndex >= 0) {
-              collapseNode(expandedNodeKeyIndex)
+              collapseNode(key)
             } else {
               if (!currentNode.leaf && !currentNode.children?.length)
                 await loadChildren(key)
@@ -147,7 +148,7 @@ const ClientPage = () => {
                     onClick={() => handleClick(item.key)}
                     onToggle={handleToggle}
                   >
-                    {item.originalData.name} {item.key}
+                    {item.originalData.name}
                   </TreeNode>
                 )
               })}
