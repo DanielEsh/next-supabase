@@ -12,13 +12,15 @@ export interface TreeNodeProps {
   leaf?: boolean
   onClick: (key: any) => void
   onExpand?: (key: number | string) => void
+  onToggle?: (key: number | string, expanded: boolean) => void
 }
 
 const DEFAULT_INDENT = 4
 const INDENT_MULTIPLIER = 20
 
 export const TreeNode = (props: TreeNodeProps) => {
-  const { node, level, leaf, expanded, children, onClick, onExpand } = props
+  const { node, level, leaf, expanded, children, onClick, onExpand, onToggle } =
+    props
 
   const getStyles = () => ({
     paddingLeft: `${level * INDENT_MULTIPLIER || DEFAULT_INDENT}px`,
@@ -34,14 +36,20 @@ export const TreeNode = (props: TreeNodeProps) => {
   })
 
   return (
-    <button
+    <li
       style={getStyles()}
       className="flex gap-1"
-      onClick={handleClick}
     >
-      {!leaf && <span className={iconClasses}>{<TreeIcon />}</span>}
+      {!leaf && (
+        <button
+          className={iconClasses}
+          onClick={() => onToggle(node?.key, expanded)}
+        >
+          {<TreeIcon />}
+        </button>
+      )}
       <span className="tree node">{children}</span>
       <span>key: {node?.key}</span>
-    </button>
+    </li>
   )
 }

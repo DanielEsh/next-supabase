@@ -60,13 +60,17 @@ const ClientPage = () => {
           const handleClick = async (key) => {
             console.log('KEY', key)
             const parentNode = getNode(key)
+
+            if (!parentNode.leaf && !parentNode.children?.length) {
+            }
+          }
+
+          const loadChildren = async (key: number) => {
+            const parentNode = getNode(key)
+
             const data = await queryClient.fetchQuery({
               queryKey: getTreeChildrenKey(key),
               queryFn: () => getTreeChildren(key),
-            })
-
-            setExpandedKeys((prevState) => {
-              return [...prevState, key]
             })
 
             const nestedChildren = createTreeNode({
@@ -74,8 +78,6 @@ const ClientPage = () => {
               parent: parentNode,
               level: parentNode.level + 1,
             })
-
-            console.log('nestedChildren', nestedChildren)
 
             parentNode.isLeaf = false
             parentNode.children = nestedChildren
@@ -90,13 +92,44 @@ const ClientPage = () => {
             })
           }
 
-          const handleExpand = () => {
-            console.log('expand')
+          const handleExpand = (key: number) => {
+            setExpandedKeys((prevState) => {
+              return prevState.filter((i) => i !== key)
+            })
+          }
+
+          function collapseNode(keyIndex: number) {
+            setExpandedKeys((prevState) => {
+              return prevState.splice(keyIndex, 1)
+            })
+          }
+
+          function expandNode(key: number) {
+            setExpandedKeys((prevState) => {
+              return [...prevState, key]
+            })
+          }
+
+          const handleToggle = async (key: number, status: boolean) => {
+            console.log('TOGGLE', key, status)
+            const expandedNodeKeyIndex = expandedKeys.findIndex(
+              (v) => v === key,
+            )
+            const currentNode = getNode(key)
+            if (expandedNodeKeyIndex >= 0) {
+              collapseNode(expandedNodeKeyIndex)
+            } else {
+              if (!currentNode.leaf && !currentNode.children?.length)
+                await loadChildren(key)
+
+              expandNode(currentNode.key)
+            }
           }
 
           const flattedNodes = useMemo(() => {
+            console.log('FLATTED NODES', expandedKeys)
             return getFlattenedRenderTree(actualNodes, expandedKeys)
-          }, [actualNodes])
+          }, [actualNodes, expandedKeys])
 
           return (
             <>
@@ -109,8 +142,10 @@ const ClientPage = () => {
                     key={item.key}
                     level={item.level}
                     leaf={item.isLeaf}
+                    node={item}
+                    expanded={item.expanded}
                     onClick={() => handleClick(item.key)}
-                    onExpand={handleExpand}
+                    onToggle={handleToggle}
                   >
                     {item.originalData.name} {item.key}
                   </TreeNode>

@@ -1,9 +1,4 @@
-import { GetChildren } from '@repo/ui/src/tree/utils/create'
 import { ITreeNode, Key } from '@repo/ui/src/tree/utils/interface'
-import {
-  defaultGetKey,
-  getDefaultLeaf,
-} from '@repo/ui/src/tree/utils/tree-module'
 
 const treeNodeMap = new Map()
 const levelTreeNodeMap = new Map()
@@ -61,6 +56,7 @@ export function getFlattenedRenderTree(
   const flattenedNodes: ITreeNode[] = []
   function traverse(treeNodes: ITreeNode[]) {
     treeNodes.forEach((treeNode) => {
+      treeNode.expanded = false
       flattenedNodes.push(treeNode)
       if (treeNode.isLeaf || !treeNode.children) return
       if (
@@ -68,6 +64,7 @@ export function getFlattenedRenderTree(
         expandedKeySet === undefined ||
         expandedKeySet.has(treeNode.key)
       ) {
+        treeNode.expanded = true
         traverse(treeNode.children)
       }
     })
