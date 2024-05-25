@@ -2,14 +2,16 @@
 
 import { useEffect, useMemo, useState } from 'react'
 
-import {
-  TreeNode,
-  createTree,
-  getNode,
-  getFlattenedRenderTree,
-} from '@repo/ui/tree'
+import { TreeNode } from '@repo/ui/tree'
 import { useQueryClient } from '@tanstack/react-query'
 
+import {
+  createTree,
+  createTreeNode,
+  getNode,
+  getFlattenedRenderTree,
+  getParent,
+} from '@/app/(dashboard)/tree/tree-module'
 import { ReactQuery } from '@/components/ReactQuery'
 import { getTreeChildren } from '@/entities/test/repository/requests'
 import {
@@ -35,11 +37,7 @@ const ClientPage = () => {
           const transformData = (data) => {
             return data.map((item) => {
               return {
-                key: item.id,
-                isLeaf: item.leaf || false,
-                name: item.name,
-                originalData: item,
-                level: 1,
+                ...item,
                 children: [],
               }
             })
@@ -47,22 +45,17 @@ const ClientPage = () => {
 
           const transformedData = tree.map((item) => {
             return {
-              key: item.id,
-              isLeaf: item.leaf || false,
-              name: item.name,
-              originalData: item,
-              level: 0,
+              ...item,
               children: [],
             }
           })
 
-          useEffect(() => {
-            setActualNodes(transformedData)
-          }, [])
+          const treeData = createTree(transformedData)
 
-          const createdTree = createTree(transformedData, {
-            getLeaf: (node) => node.leaf,
-          })
+          useEffect(() => {
+            console.log('CREATE', treeData)
+            setActualNodes(treeData)
+          }, [])
 
           const handleClick = async (key) => {
             console.log('KEY', key)
@@ -76,14 +69,16 @@ const ClientPage = () => {
               return [...prevState, key]
             })
 
-            const nestedChildren = transformData(data)
+            const nestedChildren = createTreeNode({
+              nodes: transformData(data),
+              parent: parentNode,
+              level: parentNode.level + 1,
+            })
+
+            console.log('nestedChildren', nestedChildren)
 
             parentNode.isLeaf = false
-            parentNode.children = createTree(nestedChildren, {
-              parent: parentNode,
-              getKey: (node) => node.id,
-              getLeaf: (node) => node.leaf,
-            })
+            parentNode.children = nestedChildren
 
             setActualNodes((prevElements) => {
               const newElements = [...prevElements]
