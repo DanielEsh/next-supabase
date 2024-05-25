@@ -22,10 +22,11 @@ export class FileService {
   }
 
   async getTopLevelNodes(): Promise<FileEntity[]> {
-    return this.fileEntityRepository.find({
-      where: { parent: null },
-      relations: ['children'],
-    });
+    return this.fileEntityRepository
+      .createQueryBuilder('file')
+      .select(['file.id', 'file.name', 'file.leaf', 'file.parent'])
+      .where('file.parent IS NULL')
+      .getMany();
   }
 
   async getChildren(id: number): Promise<FileEntity[]> {
