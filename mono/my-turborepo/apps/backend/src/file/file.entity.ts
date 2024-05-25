@@ -15,8 +15,8 @@ export class FileEntity {
   @Column()
   name: string;
 
-  @Column()
-  leaf: boolean;
+  @Column({ nullable: true }) // Разрешаем null для родительского ID, если это верхний уровень
+  parentId: number; // Изменяем тип поля на число, чтобы хранить ID родительского элемента
 
   @ManyToOne(() => FileEntity, (node) => node.children)
   @JoinColumn({ name: 'parentId' })
