@@ -3,6 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FileEntity } from './file.entity';
 
+interface FileDto extends FileEntity {
+  leaf: boolean;
+}
+
 @Injectable()
 export class FileService {
   constructor(
@@ -21,25 +25,34 @@ export class FileService {
     return this.fileEntityRepository.find({ relations: ['children'] });
   }
 
-  async getTopLevelNodes(): Promise<FileEntity[]> {
-    const res = await this.fileEntityRepository
-      .createQueryBuilder('file')
-      .select(['file.id', 'file.name', 'file.parentId'])
-      // .leftJoin('file.parent', 'parent')
-      // .where('file.parent IS NULL')
-      .getMany();
-
-    return res;
+  transformFilesNodes(nodes: FileEntity[]): FileDto[] {
+    return nodes.map((node) => ({
+      id: node.id,
+      name: node.name,
+      parentId: node.parentId,
+      leaf: Boolean(!node.children?.length),
+    }));
   }
 
-  async getChildren(id: number): Promise<FileEntity[]> {
+  async getTopLevelNodes(): Promise<FileDto[]> {
+    const topLevelNodes = await this.fileEntityRepository
+      .createQueryBuilder('file')
+      .leftJoinAndSelect('file.children', 'children') // Загружаем дочерние узлы
+      .where('file.parent IS NULL')
+      .getMany();
+
+    return this.transformFilesNodes(topLevelNodes);
+  }
+
+  async getChildren(id: number): Promise<FileDto[]> {
     const parentNode = await this.fileEntityRepository.findOne({
       where: {
         id,
       },
       relations: ['children'],
     });
-    return parentNode ? parentNode.children : [];
+
+    return parentNode ? this.transformFilesNodes(parentNode.children) : [];
   }
 
   async getNode(id: number): Promise<FileEntity> {

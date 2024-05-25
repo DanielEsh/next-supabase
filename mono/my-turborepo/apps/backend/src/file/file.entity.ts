@@ -20,8 +20,8 @@ export class FileEntity {
 
   @ManyToOne(() => FileEntity, (node) => node.children)
   @JoinColumn({ name: 'parentId' })
-  parent: FileEntity;
+  parent?: FileEntity;
 
   @OneToMany(() => FileEntity, (node) => node.parent)
-  children: FileEntity[];
+  children?: FileEntity[];
 }
