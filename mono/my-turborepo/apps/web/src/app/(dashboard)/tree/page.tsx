@@ -36,7 +36,7 @@ const ClientPage = () => {
             return data.map((item) => {
               return {
                 key: item.id,
-                leaf: item.leaf || false,
+                isLeaf: item.leaf || false,
                 name: item.name,
                 originalData: item,
                 level: 1,
@@ -48,7 +48,7 @@ const ClientPage = () => {
           const transformedData = tree.map((item) => {
             return {
               key: item.id,
-              leaf: item.leaf || false,
+              isLeaf: item.leaf || false,
               name: item.name,
               originalData: item,
               level: 0,
@@ -105,9 +105,9 @@ const ClientPage = () => {
 
           return (
             <>
-              <pre>
-                <code>{JSON.stringify(actualNodes, null, 2)}</code>
-              </pre>
+              {/*<pre>*/}
+              {/*  <code>{JSON.stringify(actualNodes, null, 2)}</code>*/}
+              {/*</pre>*/}
               {flattedNodes.map((item) => {
                 return (
                   <TreeNode
