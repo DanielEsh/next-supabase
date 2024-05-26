@@ -34,6 +34,8 @@ const ClientPage = () => {
         render={(tree) => {
           const [actualNodes, setActualNodes] = useState([])
           const [expandedKeys, setExpandedKeys] = useState([])
+          const [loadingKeys, setLoadingsKeys] = useState(new Set<number>())
+
           const transformData = (data) => {
             return data.map((item) => {
               return {
@@ -129,8 +131,23 @@ const ClientPage = () => {
             })
           }
 
+          const addLoadingKey = (key: number) => {
+            setLoadingsKeys((prevKeys) => {
+              const newKeys = new Set(prevKeys)
+              newKeys.add(key)
+              return newKeys
+            })
+          }
+
+          const deleteLoadingKey = (key: number) => {
+            setLoadingsKeys((prevKeys) => {
+              const newKeys = new Set(prevKeys)
+              newKeys.delete(key)
+              return newKeys
+            })
+          }
+
           const handleToggle = async (key: number, status: boolean) => {
-            console.log('TOGGLE', key, status)
             const expandedNodeKeyIndex = expandedKeys.findIndex(
               (v) => v === key,
             )
@@ -138,15 +155,18 @@ const ClientPage = () => {
             if (expandedNodeKeyIndex >= 0) {
               collapseNode(key)
             } else {
-              if (!currentNode.leaf && !currentNode.children?.length)
+              if (!currentNode.leaf && !currentNode.children?.length) {
+                addLoadingKey(key)
                 await loadChildren(key)
+                deleteLoadingKey(key)
+              }
 
               expandNode(currentNode.key)
             }
           }
 
           const flattedNodes = useMemo(() => {
-            console.log('FLATTED NODES', expandedKeys)
+            console.log('EXPANDED KEYS', expandedKeys)
             return getFlattenedRenderTree(actualNodes, expandedKeys)
           }, [actualNodes, expandedKeys])
 
@@ -163,6 +183,7 @@ const ClientPage = () => {
                     leaf={item.isLeaf}
                     node={item}
                     expanded={item.expanded}
+                    loading={loadingKeys.has(item.key)}
                     onClick={() => handleClick(item.key)}
                     onToggle={handleToggle}
                   >

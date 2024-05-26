@@ -12,12 +12,14 @@ export const getUsers = async (): Promise<UserDto[]> => {
 
 export const getTree = async () => {
   const response = await $api.get('/tree')
+  await new Promise((resolve) => setTimeout(resolve, 2000))
 
   return response.data
 }
 
 export const getTreeChildren = async (id: number) => {
   const response = await $api.get(`/tree/${id}/children`)
+  await new Promise((resolve) => setTimeout(resolve, 2000))
 
   return response.data
 }

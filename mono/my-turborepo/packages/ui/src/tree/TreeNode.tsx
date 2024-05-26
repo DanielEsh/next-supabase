@@ -10,6 +10,7 @@ export interface TreeNodeProps {
   children: ReactNode
   expanded?: boolean
   leaf?: boolean
+  loading?: boolean
   onClick: (key: any) => void
   onExpand?: (key: number | string) => void
   onToggle?: (key: number | string, expanded: boolean) => void
@@ -19,8 +20,17 @@ const DEFAULT_INDENT = 4
 const INDENT_MULTIPLIER = 20
 
 export const TreeNode = (props: TreeNodeProps) => {
-  const { node, level, leaf, expanded, children, onClick, onExpand, onToggle } =
-    props
+  const {
+    node,
+    level,
+    leaf,
+    expanded,
+    loading,
+    children,
+    onClick,
+    onExpand,
+    onToggle,
+  } = props
 
   const getStyles = () => ({
     paddingLeft: `${level * INDENT_MULTIPLIER || DEFAULT_INDENT}px`,
@@ -44,6 +54,7 @@ export const TreeNode = (props: TreeNodeProps) => {
       style={getStyles()}
       className="flex gap-1"
     >
+      {loading && <div>Loading...</div>}
       {!leaf && (
         <button
           className={iconClasses}
