@@ -8,6 +8,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { SupabaseGuard } from './supabase/supabase.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FileModule } from './file/file.module';
+import { TreeModule } from './tree/tree.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { FileModule } from './file/file.module';
       synchronize: true,
     }),
     FileModule,
+    TreeModule,
   ],
   controllers: [AppController],
   providers: [
