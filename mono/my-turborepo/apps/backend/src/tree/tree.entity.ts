@@ -21,9 +21,9 @@ export class TreeEntity {
   parentId: number;
 
   @TreeChildren()
-  children: TreeEntity[];
+  children?: TreeEntity[];
 
   @TreeParent()
   @JoinColumn({ name: 'parentId' })
-  parent: TreeEntity;
+  parent?: TreeEntity;
 }
