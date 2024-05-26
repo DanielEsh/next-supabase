@@ -70,6 +70,7 @@ export function getFlattenedRenderTree(
     })
   }
   traverse(treeNodes)
+  console.log('FLATTENED', flattenedNodes)
   return flattenedNodes
 }
 

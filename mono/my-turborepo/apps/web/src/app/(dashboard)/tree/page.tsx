@@ -65,6 +65,25 @@ const ClientPage = () => {
             }
           }
 
+          const updateNode = (key, newChildren, nodes) => {
+            return nodes.map((node) => {
+              if (node.key === key) {
+                return {
+                  ...node,
+                  children: newChildren,
+                  isLeaf: false,
+                }
+              }
+              if (node.children) {
+                return {
+                  ...node,
+                  children: updateNode(key, newChildren, node.children),
+                }
+              }
+              return node
+            })
+          }
+
           const loadChildren = async (key: number) => {
             const parentNode = getNode(key)
             console.log('PARENT NODE', parentNode)
@@ -83,15 +102,14 @@ const ClientPage = () => {
             parentNode.isLeaf = false
             parentNode.children = nestedChildren
 
-            setActualNodes((prevElements) => {
-              const newElements = [...prevElements]
-              const element = newElements[parentNode.index]
-
-              element.children = [...nestedChildren]
-
-              return newElements
-            })
+            setActualNodes((prevNodes) =>
+              updateNode(key, nestedChildren, prevNodes),
+            )
           }
+
+          useEffect(() => {
+            console.log('actual', actualNodes)
+          }, [actualNodes])
 
           const handleExpand = (key: number) => {
             setExpandedKeys((prevState) => {
