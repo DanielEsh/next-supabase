@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { TreeNode } from '@repo/ui/tree'
 import { useQueryClient } from '@tanstack/react-query'
 
+import { TreeCreateForm } from '@/app/(dashboard)/tree/tree-create-form'
 import {
   createTree,
   createTreeNode,
@@ -19,6 +20,8 @@ import {
   useTree,
   useTreeChildren,
 } from '@/entities/test/use-tree'
+import { Input } from '@/shared/ui'
+import { Form } from '@/shared/ui/form'
 
 const ClientPage = () => {
   const usersQuery = useTree()
@@ -32,6 +35,7 @@ const ClientPage = () => {
         queryResult={usersQuery}
         renderLoading={<p>Getting users data...</p>}
         render={(tree) => {
+          console.log('tree', tree)
           const [actualNodes, setActualNodes] = useState([])
           const [expandedKeys, setExpandedKeys] = useState([])
           const [loadingKeys, setLoadingsKeys] = useState(new Set<number>())
@@ -57,7 +61,7 @@ const ClientPage = () => {
           useEffect(() => {
             console.log('CREATE', treeData)
             setActualNodes(treeData)
-          }, [])
+          }, [tree])
 
           const handleClick = async (key) => {
             console.log('KEY', key)
@@ -175,6 +179,9 @@ const ClientPage = () => {
               {/*<pre>*/}
               {/*  <code>{JSON.stringify(actualNodes, null, 2)}</code>*/}
               {/*</pre>*/}
+
+              <TreeCreateForm />
+
               {flattedNodes.map((item) => {
                 return (
                   <TreeNode
