@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
 import { TreeDto, TreeService } from './tree.service';
 import { TreeEntity } from './tree.entity';
@@ -33,5 +34,13 @@ export class TreeController {
   @Get(':id/children')
   async getChildren(@Param('id') id: number): Promise<TreeDto[]> {
     return this.treeService.getChildren(id);
+  }
+
+  @Put(':id')
+  updateNode(
+    @Param('id') id: number,
+    @Body('name') name: string,
+  ): Promise<TreeDto> {
+    return this.treeService.updateNode(id, name);
   }
 }

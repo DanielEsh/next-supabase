@@ -113,4 +113,16 @@ export class TreeService {
 
     return await this.treeRepository.save(newNode);
   }
+
+  async updateNode(id: number, name: string): Promise<any> {
+    const node = await this.treeRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    node.name = name;
+
+    return this.treeRepository.save(node);
+  }
 }
