@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 
 import {
   createTreeNodeBackend,
+  deleteTreeNode,
   getTree,
   getTreeChildren,
   updateTreeById,
@@ -36,5 +37,11 @@ export const useUpdateTreeMutation = () => {
     mutationFn: ({ form, id }: { form: UpdateTreeDto; id: number }) => {
       return updateTreeById(form, id)
     },
+  })
+}
+
+export const useDeleteTreeNodeMutation = () => {
+  return useMutation({
+    mutationFn: deleteTreeNode,
   })
 }

@@ -42,3 +42,7 @@ export interface UpdateTreeDto {
 export const updateTreeById = async (dto: UpdateTreeDto, id: number) => {
   return (await $api.put<UpdateTreeDto>(`/tree/${id}`, dto)).data
 }
+
+export const deleteTreeNode = async (id: number) => {
+  return (await $api.delete(`/tree/${id}`)).data
+}

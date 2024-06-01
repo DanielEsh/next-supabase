@@ -6,6 +6,7 @@ import { TreeNode } from '@repo/ui/tree'
 import { useQueryClient } from '@tanstack/react-query'
 
 import { TreeCreateForm } from '@/app/(dashboard)/tree/tree-create-form'
+import { TreeDeleteButton } from '@/app/(dashboard)/tree/tree-delete-button'
 import {
   createTree,
   createTreeNode,
@@ -181,6 +182,7 @@ const ClientPage = () => {
 
               <TreeCreateForm parentId={selectedValue} />
               <TreeUpdateForm parentId={selectedValue} />
+              {selectedValue && <TreeDeleteButton id={selectedValue} />}
 
               {flattedNodes.map((item) => {
                 return (
