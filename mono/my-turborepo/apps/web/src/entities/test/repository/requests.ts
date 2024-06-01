@@ -34,3 +34,11 @@ export const createTreeNodeBackend = async (dto: CreateTreeDto) => {
 
   return response.data
 }
+
+export interface UpdateTreeDto {
+  name: string
+}
+
+export const updateTreeById = async (dto: UpdateTreeDto, id: number) => {
+  return (await $api.put<UpdateTreeDto>(`/tree/${id}`, dto)).data
+}

@@ -4,6 +4,8 @@ import {
   createTreeNodeBackend,
   getTree,
   getTreeChildren,
+  updateTreeById,
+  UpdateTreeDto,
 } from '@/entities/test/repository/requests'
 
 export const getTreeKey = () => ['tree']
@@ -26,5 +28,13 @@ export const useTreeChildren = (id: number) => {
 export const useCreateTreeMutation = () => {
   return useMutation({
     mutationFn: createTreeNodeBackend,
+  })
+}
+
+export const useUpdateTreeMutation = () => {
+  return useMutation({
+    mutationFn: ({ form, id }: { form: UpdateTreeDto; id: number }) => {
+      return updateTreeById(form, id)
+    },
   })
 }

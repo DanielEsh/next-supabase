@@ -13,6 +13,7 @@ import {
   getFlattenedRenderTree,
   getParent,
 } from '@/app/(dashboard)/tree/tree-module'
+import { TreeUpdateForm } from '@/app/(dashboard)/tree/tree-update-form'
 import { ReactQuery } from '@/components/ReactQuery'
 import { getTreeChildren } from '@/entities/test/repository/requests'
 import {
@@ -179,6 +180,7 @@ const ClientPage = () => {
               {/*</pre>*/}
 
               <TreeCreateForm parentId={selectedValue} />
+              <TreeUpdateForm parentId={selectedValue} />
 
               {flattedNodes.map((item) => {
                 return (
