@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TreeRepository } from 'typeorm';
 import { TreeEntity } from './tree.entity';
@@ -62,10 +62,19 @@ export class TreeService {
       },
       relations: ['children'],
     });
+    if (!parent) {
+      throw new NotFoundException(`Node with id ${id} not found`);
+    }
+    //
     const descendants = await this.treeRepository.findDescendants(parent);
 
+    // // Remove the parent node from the descendants
+    const filteredDescendants = descendants.filter(
+      (descendant) => descendant.id !== parent.id,
+    );
+
     // Get children count for each descendant
-    const descendantIds = descendants.map((desc) => desc.id);
+    const descendantIds = filteredDescendants.map((desc) => desc.id);
     const childrenCounts = await this.treeRepository
       .createQueryBuilder('tree')
       .leftJoin('tree.children', 'children')
@@ -83,6 +92,25 @@ export class TreeService {
       {},
     );
 
-    return this.toTreeDto(descendants, nodeChildrenCount);
+    return this.toTreeDto(filteredDescendants, nodeChildrenCount);
+  }
+
+  async createTreeNode(name: string, parentId?: number): Promise<TreeEntity> {
+    const newNode = new TreeEntity();
+    newNode.name = name;
+
+    if (parentId) {
+      const parent = await this.treeRepository.findOne({
+        where: { id: parentId },
+      });
+      if (!parent) {
+        throw new Error(`Parent node with id ${parentId} not found`);
+      }
+
+      newNode.parent = parent;
+      newNode.parentId = parent.id;
+    }
+
+    return await this.treeRepository.save(newNode);
   }
 }
