@@ -12,17 +12,27 @@ const treeCreateFormSchema = z.object({
 
 export type TreeCreateFormSchema = z.infer<typeof treeCreateFormSchema>
 
-export const TreeCreateForm = () => {
+interface Props {
+  parentId?: number
+}
+
+export const TreeCreateForm = ({ parentId }: Props) => {
   const formMethods = useForm(treeCreateFormSchema)
   const { mutate } = useCreateTreeMutation()
   const invalidateTree = useInvalidateTree()
 
   const handleSubmit = async (form: TreeCreateFormSchema) => {
-    mutate(form, {
-      onSuccess: async () => {
-        await invalidateTree()
+    mutate(
+      {
+        name: form.name,
+        parentId,
       },
-    })
+      {
+        onSuccess: async () => {
+          await invalidateTree()
+        },
+      },
+    )
   }
 
   return (
@@ -31,10 +41,10 @@ export const TreeCreateForm = () => {
       methods={formMethods}
       onSubmit={handleSubmit}
     >
+      Selected parent: {parentId}
       <Form.Field name="name">
         <Input label="name" />
       </Form.Field>
-
       <Button type="submit">Create</Button>
     </Form>
   )

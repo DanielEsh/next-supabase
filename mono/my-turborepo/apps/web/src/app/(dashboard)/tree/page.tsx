@@ -39,6 +39,7 @@ const ClientPage = () => {
           const [actualNodes, setActualNodes] = useState([])
           const [expandedKeys, setExpandedKeys] = useState([])
           const [loadingKeys, setLoadingsKeys] = useState(new Set<number>())
+          const [selectedValue, setSelectedValue] = useState()
 
           const transformData = (data) => {
             return data.map((item) => {
@@ -65,10 +66,7 @@ const ClientPage = () => {
 
           const handleClick = async (key) => {
             console.log('KEY', key)
-            const parentNode = getNode(key)
-
-            if (!parentNode.leaf && !parentNode.children?.length) {
-            }
+            setSelectedValue(key)
           }
 
           const updateNode = (key, newChildren, nodes) => {
@@ -180,7 +178,7 @@ const ClientPage = () => {
               {/*  <code>{JSON.stringify(actualNodes, null, 2)}</code>*/}
               {/*</pre>*/}
 
-              <TreeCreateForm />
+              <TreeCreateForm parentId={selectedValue} />
 
               {flattedNodes.map((item) => {
                 return (
@@ -190,6 +188,7 @@ const ClientPage = () => {
                     leaf={item.isLeaf}
                     node={item}
                     expanded={item.expanded}
+                    selected={item.key === selectedValue}
                     loading={loadingKeys.has(item.key)}
                     onClick={() => handleClick(item.key)}
                     onToggle={handleToggle}

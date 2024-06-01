@@ -26,6 +26,7 @@ export const getTreeChildren = async (id: number) => {
 
 export interface CreateTreeDto {
   name: string
+  parentId?: number
 }
 
 export const createTreeNodeBackend = async (dto: CreateTreeDto) => {

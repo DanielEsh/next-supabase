@@ -11,7 +11,8 @@ export interface TreeNodeProps {
   expanded?: boolean
   leaf?: boolean
   loading?: boolean
-  onClick: (key: any) => void
+  selected?: boolean
+  onClick?: (key: any) => void
   onExpand?: (key: number | string) => void
   onToggle?: (key: number | string, expanded: boolean) => void
 }
@@ -26,6 +27,7 @@ export const TreeNode = (props: TreeNodeProps) => {
     leaf,
     expanded,
     loading,
+    selected,
     children,
     onClick,
     onExpand,
@@ -37,9 +39,13 @@ export const TreeNode = (props: TreeNodeProps) => {
   })
 
   const handleClick = () => {
-    onClick(node?.key)
-    onExpand(node?.key)
+    onClick && onClick(node?.key)
+    // onExpand(node?.key)
   }
+
+  const rootClasses = classNames('flex gap-1', {
+    'bg-blue-500': selected,
+  })
 
   const iconClasses = classNames('icon', {
     'rotate-90': expanded,
@@ -52,7 +58,8 @@ export const TreeNode = (props: TreeNodeProps) => {
   return (
     <li
       style={getStyles()}
-      className="flex gap-1"
+      className={rootClasses}
+      onClick={handleClick}
     >
       {loading && <div>Loading...</div>}
       {!leaf && (
