@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -42,5 +43,10 @@ export class TreeController {
     @Body('name') name: string,
   ): Promise<TreeDto> {
     return this.treeService.updateNode(id, name);
+  }
+
+  @Delete(':id')
+  deleteNode(@Param('id') id: number): Promise<void> {
+    return this.treeService.deleteNode(id);
   }
 }

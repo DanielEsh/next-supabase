@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TreeRepository } from 'typeorm';
 import { TreeEntity } from './tree.entity';
@@ -124,5 +128,25 @@ export class TreeService {
     node.name = name;
 
     return this.treeRepository.save(node);
+  }
+
+  async deleteNode(id: number): Promise<void> {
+    const node = await this.treeRepository.findOne({
+      where: {
+        id,
+      },
+      relations: ['children'],
+    });
+
+    if (!node) {
+      throw new NotFoundException(`Node with id ${id} not found`);
+    }
+
+    if (node.children && node.children.length > 0) {
+      throw new BadRequestException(
+        `Cannot delete node with id ${id} because it has children`,
+      );
+    }
+    await this.treeRepository.remove(node);
   }
 }
