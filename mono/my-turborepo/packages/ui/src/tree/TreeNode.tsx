@@ -52,7 +52,7 @@ export const TreeNode = (props: TreeNodeProps) => {
   })
 
   const classes = classNames({
-    'pl-3': !expanded && leaf,
+    '': !expanded && leaf,
   })
 
   return (

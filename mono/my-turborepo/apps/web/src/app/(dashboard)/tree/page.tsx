@@ -15,6 +15,9 @@ import {
   getParent,
 } from '@/app/(dashboard)/tree/tree-module'
 import { TreeUpdateForm } from '@/app/(dashboard)/tree/tree-update-form'
+import { TreeView } from '@/app/(dashboard)/tree/tree-view'
+import { TreeViewNode } from '@/app/(dashboard)/tree/tree-view-node'
+import { TreeViewNodeIndicator } from '@/app/(dashboard)/tree/tree-view-node-indicator'
 import { ReactQuery } from '@/components/ReactQuery'
 import { getTreeChildren } from '@/entities/test/repository/requests'
 import {
@@ -32,6 +35,15 @@ const ClientPage = () => {
   return (
     <div>
       <p>Users list</p>
+
+      <TreeView expandedValue={[1, 2, 3]}>
+        <TreeViewNode value={1}>
+          <TreeViewNodeIndicator />
+          <span>Node 1</span>
+        </TreeViewNode>
+        <TreeViewNode value={2}>Node 2</TreeViewNode>
+        <TreeViewNode value={3}>Node 3</TreeViewNode>
+      </TreeView>
 
       <ReactQuery
         queryResult={usersQuery}
