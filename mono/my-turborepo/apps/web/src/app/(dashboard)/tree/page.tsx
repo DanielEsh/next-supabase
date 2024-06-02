@@ -37,12 +37,51 @@ const ClientPage = () => {
       <p>Users list</p>
 
       <TreeView expandedValue={[1, 2, 3]}>
-        <TreeViewNode value={1}>
+        <TreeViewNode
+          depth={0}
+          value={1}
+          expanded
+        >
           <TreeViewNodeIndicator />
           <span>Node 1</span>
         </TreeViewNode>
-        <TreeViewNode value={2}>Node 2</TreeViewNode>
-        <TreeViewNode value={3}>Node 3</TreeViewNode>
+
+        <TreeViewNode
+          value={'1.1'}
+          depth={1}
+        >
+          Node 1.1
+        </TreeViewNode>
+
+        <TreeViewNode
+          value={'1.2'}
+          depth={1}
+        >
+          Node 1.2
+        </TreeViewNode>
+
+        <TreeViewNode
+          value={'1.3'}
+          depth={1}
+        >
+          Node 1.3
+        </TreeViewNode>
+
+        <TreeViewNode
+          value={2}
+          depth={0}
+          leaf
+        >
+          Node 2
+        </TreeViewNode>
+
+        <TreeViewNode
+          value={3}
+          depth={0}
+          leaf
+        >
+          Node 3
+        </TreeViewNode>
       </TreeView>
 
       <ReactQuery
