@@ -1,34 +1,68 @@
-import { ITreeNode, Key } from '@repo/ui/src/tree/utils/interface'
+export type TreeNodeKey = string | number
 
-const treeNodeMap = new Map()
-const levelTreeNodeMap = new Map()
+interface Object {
+  [key: string]: unknown
+}
+
+export interface ITreeNode {
+  key: TreeNodeKey
+  index: number
+  level: number
+  isLeaf: boolean
+  children: Array<ITreeNode>
+  parentKey: TreeNodeKey
+  originalData: Object
+}
+
+type GetNodeKeyFn<I> = (node: I) => string
+type GetNodeKey = string | GetNodeKeyFn<unknown>
+
+type GetNodeChildrenFn<I> = (node: I) => string
+type GetNodeChildren = string | GetNodeChildrenFn<unknown>
 
 interface CreateTreeNodeOptions {
   nodes: any[]
   parent?: ITreeNode | null
   level?: number
+  getKey: GetNodeKey
+  getChildren: GetNodeChildren
+}
+
+const treeNodeMap = new Map()
+const levelTreeNodeMap = new Map()
+
+const DEFAULT_NODE_KEY_FIELD_NAME = 'key'
+const DEFAULT_NODE_CHILDREN_FIELD_NAME = 'children'
+
+const getDefaultNodeKey = (node: Object) => {
+  return node[DEFAULT_NODE_KEY_FIELD_NAME]
+}
+
+const getDefaultNodeChildren = (node: Object) => {
+  return node[DEFAULT_NODE_CHILDREN_FIELD_NAME] as string
 }
 
 export const createTreeNode = (options: CreateTreeNodeOptions) => {
-  const { nodes, parent = null, level = 0 } = options
-
+  const { nodes, parent = null, level = 0, getKey, getChildren } = options
   return nodes.map((node, index) => {
     const treeNode = {} as ITreeNode
-    const haveChildren = node.children?.length
+    const withChildren = getChildren(node)?.length
 
-    treeNode.key = node.id
+    treeNode.key = getKey(node)
     treeNode.originalData = node
     treeNode.level = level
     treeNode.index = index
     treeNode.parentKey = parent?.key ?? null
     treeNode.isLeaf = node.leaf
 
-    if (!treeNode.isLeaf && haveChildren) {
+    if (!treeNode.isLeaf && withChildren) {
       treeNode.isLeaf = false
       treeNode.children = createTreeNode({
         nodes: node.children,
         parent: treeNode,
         level: level + 1,
+        getKey,
+        getChildren,
       })
     }
 
@@ -42,17 +76,45 @@ export const createTreeNode = (options: CreateTreeNodeOptions) => {
   })
 }
 
-export function createTree(nodes: any[]) {
+export function createTree(params: CreateTreeNodeOptions) {
+  const { nodes, parent, level, getKey, getChildren } = params
+
+  const getNodeKey = (node: Object) => {
+    if (!getKey) return getDefaultNodeKey(node)
+
+    if (typeof getKey === 'string') {
+      return node[params.getKey] as string
+    }
+
+    return getKey(node)
+  }
+
+  const getNodeChildren = (node: Object) => {
+    if (!getChildren) return getDefaultNodeChildren(node)
+
+    if (typeof getChildren === 'string') {
+      return node[params.getChildren] as string
+    }
+
+    return getChildren(node)
+  }
+
   return createTreeNode({
     nodes,
+    parent,
+    level,
+    getKey: getNodeKey,
+    getChildren: getNodeChildren,
   })
 }
 
 export function getFlattenedRenderTree(
   treeNodes: ITreeNode[],
-  expandedKeys?: Key[],
+  expandedKeys?: TreeNodeKey[],
 ) {
-  const expandedKeySet = expandedKeys ? new Set<Key>(expandedKeys) : undefined
+  const expandedKeySet = expandedKeys
+    ? new Set<TreeNodeKey>(expandedKeys)
+    : undefined
   const flattenedNodes: ITreeNode[] = []
   function traverse(treeNodes: ITreeNode[]) {
     treeNodes.forEach((treeNode) => {
@@ -74,11 +136,11 @@ export function getFlattenedRenderTree(
   return flattenedNodes
 }
 
-export function getNode(key: Key) {
+export function getNode(key: TreeNodeKey) {
   return treeNodeMap.get(key) ?? null
 }
 
-export function getParent(key: Key) {
+export function getParent(key: TreeNodeKey) {
   const parentKey = getNode(key).parentKey
   return getNode(parentKey) ?? null
 }

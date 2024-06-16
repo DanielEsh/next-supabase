@@ -37,7 +37,10 @@ export function useTree(initialData: any) {
     }
   }
 
-  const createdTree = createTree(initialData)
+  const createdTree = createTree({
+    nodes: initialData,
+    getKey: 'id',
+  })
 
   const flattedTreeNodes = useMemo(() => {
     return getFlattenedRenderTree(createdTree, internalExpandedValue)

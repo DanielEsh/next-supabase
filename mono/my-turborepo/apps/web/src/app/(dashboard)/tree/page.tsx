@@ -74,7 +74,48 @@ const ClientPage = () => {
     },
   ]
 
+  const initialTreeStruct2 = [
+    {
+      value: '1',
+      label: 'Node 1',
+      items: [
+        {
+          value: '1.1',
+          label: 'Node 1.1',
+        },
+        {
+          value: '1.2',
+          label: 'Node 1.2',
+        },
+        {
+          value: '1.3',
+          label: 'Node 1.3',
+        },
+      ],
+    },
+    {
+      value: '2',
+      label: 'Node 2',
+    },
+    {
+      value: '3',
+      label: 'Node 3',
+    },
+    {
+      value: '4',
+      label: 'Node 4',
+      items: [
+        {
+          value: '4.1',
+          label: 'Node 4.1',
+        },
+      ],
+    },
+  ]
+
   const { flattedTreeNodes, toggleNode } = useTree(initialTreeStruct)
+
+  console.log('FLat', flattedTreeNodes)
 
   const handleNodeToggleClick = (value: any) => {
     toggleNode(value)
@@ -99,178 +140,178 @@ const ClientPage = () => {
         })}
       </TreeView>
 
-      <ReactQuery
-        queryResult={usersQuery}
-        renderLoading={<p>Getting users data...</p>}
-        render={(tree) => {
-          console.log('tree', tree)
-          const [actualNodes, setActualNodes] = useState([])
-          const [expandedKeys, setExpandedKeys] = useState([])
-          const [loadingKeys, setLoadingsKeys] = useState(new Set<number>())
-          const [selectedValue, setSelectedValue] = useState()
+      {/*<ReactQuery*/}
+      {/*  queryResult={usersQuery}*/}
+      {/*  renderLoading={<p>Getting users data...</p>}*/}
+      {/*  render={(tree) => {*/}
+      {/*    console.log('tree', tree)*/}
+      {/*    const [actualNodes, setActualNodes] = useState([])*/}
+      {/*    const [expandedKeys, setExpandedKeys] = useState([])*/}
+      {/*    const [loadingKeys, setLoadingsKeys] = useState(new Set<number>())*/}
+      {/*    const [selectedValue, setSelectedValue] = useState()*/}
 
-          const transformData = (data) => {
-            return data.map((item) => {
-              return {
-                ...item,
-                children: [],
-              }
-            })
-          }
+      {/*    const transformData = (data) => {*/}
+      {/*      return data.map((item) => {*/}
+      {/*        return {*/}
+      {/*          ...item,*/}
+      {/*          children: [],*/}
+      {/*        }*/}
+      {/*      })*/}
+      {/*    }*/}
 
-          const transformedData = tree.map((item) => {
-            return {
-              ...item,
-              children: [],
-            }
-          })
+      {/*    const transformedData = tree.map((item) => {*/}
+      {/*      return {*/}
+      {/*        ...item,*/}
+      {/*        children: [],*/}
+      {/*      }*/}
+      {/*    })*/}
 
-          const treeData = createTree(transformedData)
+      {/*    const treeData = createTree(transformedData)*/}
 
-          useEffect(() => {
-            console.log('CREATE', treeData)
-            setActualNodes(treeData)
-          }, [tree])
+      {/*    useEffect(() => {*/}
+      {/*      console.log('CREATE', treeData)*/}
+      {/*      setActualNodes(treeData)*/}
+      {/*    }, [tree])*/}
 
-          const handleClick = async (key) => {
-            console.log('KEY', key)
-            setSelectedValue(key)
-          }
+      {/*    const handleClick = async (key) => {*/}
+      {/*      console.log('KEY', key)*/}
+      {/*      setSelectedValue(key)*/}
+      {/*    }*/}
 
-          const updateNode = (key, newChildren, nodes) => {
-            return nodes.map((node) => {
-              if (node.key === key) {
-                return {
-                  ...node,
-                  children: newChildren,
-                  isLeaf: false,
-                }
-              }
-              if (node.children) {
-                return {
-                  ...node,
-                  children: updateNode(key, newChildren, node.children),
-                }
-              }
-              return node
-            })
-          }
+      {/*    const updateNode = (key, newChildren, nodes) => {*/}
+      {/*      return nodes.map((node) => {*/}
+      {/*        if (node.key === key) {*/}
+      {/*          return {*/}
+      {/*            ...node,*/}
+      {/*            children: newChildren,*/}
+      {/*            isLeaf: false,*/}
+      {/*          }*/}
+      {/*        }*/}
+      {/*        if (node.children) {*/}
+      {/*          return {*/}
+      {/*            ...node,*/}
+      {/*            children: updateNode(key, newChildren, node.children),*/}
+      {/*          }*/}
+      {/*        }*/}
+      {/*        return node*/}
+      {/*      })*/}
+      {/*    }*/}
 
-          const loadChildren = async (key: number) => {
-            const parentNode = getNode(key)
-            console.log('PARENT NODE', parentNode)
+      {/*    const loadChildren = async (key: number) => {*/}
+      {/*      const parentNode = getNode(key)*/}
+      {/*      console.log('PARENT NODE', parentNode)*/}
 
-            const data = await queryClient.fetchQuery({
-              queryKey: getTreeChildrenKey(key),
-              queryFn: () => getTreeChildren(key),
-            })
+      {/*      const data = await queryClient.fetchQuery({*/}
+      {/*        queryKey: getTreeChildrenKey(key),*/}
+      {/*        queryFn: () => getTreeChildren(key),*/}
+      {/*      })*/}
 
-            const nestedChildren = createTreeNode({
-              nodes: transformData(data),
-              parent: parentNode,
-              level: parentNode.level + 1,
-            })
+      {/*      const nestedChildren = createTreeNode({*/}
+      {/*        nodes: transformData(data),*/}
+      {/*        parent: parentNode,*/}
+      {/*        level: parentNode.level + 1,*/}
+      {/*      })*/}
 
-            parentNode.isLeaf = false
-            parentNode.children = nestedChildren
+      {/*      parentNode.isLeaf = false*/}
+      {/*      parentNode.children = nestedChildren*/}
 
-            setActualNodes((prevNodes) =>
-              updateNode(key, nestedChildren, prevNodes),
-            )
-          }
+      {/*      setActualNodes((prevNodes) =>*/}
+      {/*        updateNode(key, nestedChildren, prevNodes),*/}
+      {/*      )*/}
+      {/*    }*/}
 
-          useEffect(() => {
-            console.log('actual', actualNodes)
-          }, [actualNodes])
+      {/*    useEffect(() => {*/}
+      {/*      console.log('actual', actualNodes)*/}
+      {/*    }, [actualNodes])*/}
 
-          const handleExpand = (key: number) => {
-            setExpandedKeys((prevState) => {
-              return prevState.filter((i) => i !== key)
-            })
-          }
+      {/*    const handleExpand = (key: number) => {*/}
+      {/*      setExpandedKeys((prevState) => {*/}
+      {/*        return prevState.filter((i) => i !== key)*/}
+      {/*      })*/}
+      {/*    }*/}
 
-          function collapseNode(key: number) {
-            setExpandedKeys((prevState) => {
-              return prevState.filter((item) => item !== key)
-            })
-          }
+      {/*    function collapseNode(key: number) {*/}
+      {/*      setExpandedKeys((prevState) => {*/}
+      {/*        return prevState.filter((item) => item !== key)*/}
+      {/*      })*/}
+      {/*    }*/}
 
-          function expandNode(key: number) {
-            setExpandedKeys((prevState) => {
-              return [...prevState, key]
-            })
-          }
+      {/*    function expandNode(key: number) {*/}
+      {/*      setExpandedKeys((prevState) => {*/}
+      {/*        return [...prevState, key]*/}
+      {/*      })*/}
+      {/*    }*/}
 
-          const addLoadingKey = (key: number) => {
-            setLoadingsKeys((prevKeys) => {
-              const newKeys = new Set(prevKeys)
-              newKeys.add(key)
-              return newKeys
-            })
-          }
+      {/*    const addLoadingKey = (key: number) => {*/}
+      {/*      setLoadingsKeys((prevKeys) => {*/}
+      {/*        const newKeys = new Set(prevKeys)*/}
+      {/*        newKeys.add(key)*/}
+      {/*        return newKeys*/}
+      {/*      })*/}
+      {/*    }*/}
 
-          const deleteLoadingKey = (key: number) => {
-            setLoadingsKeys((prevKeys) => {
-              const newKeys = new Set(prevKeys)
-              newKeys.delete(key)
-              return newKeys
-            })
-          }
+      {/*    const deleteLoadingKey = (key: number) => {*/}
+      {/*      setLoadingsKeys((prevKeys) => {*/}
+      {/*        const newKeys = new Set(prevKeys)*/}
+      {/*        newKeys.delete(key)*/}
+      {/*        return newKeys*/}
+      {/*      })*/}
+      {/*    }*/}
 
-          const handleToggle = async (key: number, status: boolean) => {
-            const expandedNodeKeyIndex = expandedKeys.findIndex(
-              (v) => v === key,
-            )
-            const currentNode = getNode(key)
-            if (expandedNodeKeyIndex >= 0) {
-              collapseNode(key)
-            } else {
-              if (!currentNode.leaf && !currentNode.children?.length) {
-                addLoadingKey(key)
-                await loadChildren(key)
-                deleteLoadingKey(key)
-              }
+      {/*    const handleToggle = async (key: number, status: boolean) => {*/}
+      {/*      const expandedNodeKeyIndex = expandedKeys.findIndex(*/}
+      {/*        (v) => v === key,*/}
+      {/*      )*/}
+      {/*      const currentNode = getNode(key)*/}
+      {/*      if (expandedNodeKeyIndex >= 0) {*/}
+      {/*        collapseNode(key)*/}
+      {/*      } else {*/}
+      {/*        if (!currentNode.leaf && !currentNode.children?.length) {*/}
+      {/*          addLoadingKey(key)*/}
+      {/*          await loadChildren(key)*/}
+      {/*          deleteLoadingKey(key)*/}
+      {/*        }*/}
 
-              expandNode(currentNode.key)
-            }
-          }
+      {/*        expandNode(currentNode.key)*/}
+      {/*      }*/}
+      {/*    }*/}
 
-          const flattedNodes = useMemo(() => {
-            console.log('EXPANDED KEYS', expandedKeys)
-            return getFlattenedRenderTree(actualNodes, expandedKeys)
-          }, [actualNodes, expandedKeys])
+      {/*    const flattedNodes = useMemo(() => {*/}
+      {/*      console.log('EXPANDED KEYS', expandedKeys)*/}
+      {/*      return getFlattenedRenderTree(actualNodes, expandedKeys)*/}
+      {/*    }, [actualNodes, expandedKeys])*/}
 
-          return (
-            <>
-              {/*<pre>*/}
-              {/*  <code>{JSON.stringify(actualNodes, null, 2)}</code>*/}
-              {/*</pre>*/}
+      {/*    return (*/}
+      {/*      <>*/}
+      {/*        /!*<pre>*!/*/}
+      {/*        /!*  <code>{JSON.stringify(actualNodes, null, 2)}</code>*!/*/}
+      {/*        /!*</pre>*!/*/}
 
-              <TreeCreateForm parentId={selectedValue} />
-              <TreeUpdateForm parentId={selectedValue} />
-              {selectedValue && <TreeDeleteButton id={selectedValue} />}
+      {/*        <TreeCreateForm parentId={selectedValue} />*/}
+      {/*        <TreeUpdateForm parentId={selectedValue} />*/}
+      {/*        {selectedValue && <TreeDeleteButton id={selectedValue} />}*/}
 
-              {flattedNodes.map((item) => {
-                return (
-                  <TreeNode
-                    key={item.key}
-                    level={item.level}
-                    leaf={item.isLeaf}
-                    node={item}
-                    expanded={item.expanded}
-                    selected={item.key === selectedValue}
-                    loading={loadingKeys.has(item.key)}
-                    onClick={() => handleClick(item.key)}
-                    onToggle={handleToggle}
-                  >
-                    {item.originalData.name}
-                  </TreeNode>
-                )
-              })}
-            </>
-          )
-        }}
-      />
+      {/*        {flattedNodes.map((item) => {*/}
+      {/*          return (*/}
+      {/*            <TreeNode*/}
+      {/*              key={item.key}*/}
+      {/*              level={item.level}*/}
+      {/*              leaf={item.isLeaf}*/}
+      {/*              node={item}*/}
+      {/*              expanded={item.expanded}*/}
+      {/*              selected={item.key === selectedValue}*/}
+      {/*              loading={loadingKeys.has(item.key)}*/}
+      {/*              onClick={() => handleClick(item.key)}*/}
+      {/*              onToggle={handleToggle}*/}
+      {/*            >*/}
+      {/*              {item.originalData.name}*/}
+      {/*            </TreeNode>*/}
+      {/*          )*/}
+      {/*        })}*/}
+      {/*      </>*/}
+      {/*    )*/}
+      {/*  }}*/}
+      {/*/>*/}
     </div>
   )
 }
