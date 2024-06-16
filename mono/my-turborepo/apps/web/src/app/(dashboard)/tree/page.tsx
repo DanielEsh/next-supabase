@@ -18,70 +18,85 @@ import { TreeUpdateForm } from '@/app/(dashboard)/tree/tree-update-form'
 import { TreeView } from '@/app/(dashboard)/tree/tree-view'
 import { TreeViewNode } from '@/app/(dashboard)/tree/tree-view-node'
 import { TreeViewNodeIndicator } from '@/app/(dashboard)/tree/tree-view-node-indicator'
+import { useTree } from '@/app/(dashboard)/tree/use-tree'
 import { ReactQuery } from '@/components/ReactQuery'
 import { getTreeChildren } from '@/entities/test/repository/requests'
 import {
   getTreeChildrenKey,
-  useTree,
+  useTree as useTreeQuery,
   useTreeChildren,
 } from '@/entities/test/use-tree'
 import { Input } from '@/shared/ui'
 import { Form } from '@/shared/ui/form'
 
 const ClientPage = () => {
-  const usersQuery = useTree()
+  const usersQuery = useTreeQuery()
   const queryClient = useQueryClient()
+
+  const initialExpanded = ['1']
+
+  const initialTreeStruct = [
+    {
+      id: '1',
+      name: 'Node 1',
+      children: [
+        {
+          id: '1.1',
+          name: 'Node 1.1',
+        },
+        {
+          id: '1.2',
+          name: 'Node 1.2',
+        },
+        {
+          id: '1.3',
+          name: 'Node 1.3',
+        },
+      ],
+    },
+    {
+      id: '2',
+      name: 'Node 2',
+    },
+    {
+      id: '3',
+      name: 'Node 3',
+    },
+    {
+      id: '4',
+      name: 'Node 4',
+      children: [
+        {
+          id: '4.1',
+          name: 'Node 4.1',
+        },
+      ],
+    },
+  ]
+
+  const { flattedTreeNodes, toggleNode } = useTree(initialTreeStruct)
+
+  const handleNodeToggleClick = (value: any) => {
+    toggleNode(value)
+  }
 
   return (
     <div>
       <p>Users list</p>
 
       <TreeView expandedValue={[1, 2, 3]}>
-        <TreeViewNode
-          depth={0}
-          value={1}
-          expanded
-        >
-          <TreeViewNodeIndicator />
-          <span>Node 1</span>
-        </TreeViewNode>
-
-        <TreeViewNode
-          value={'1.1'}
-          depth={1}
-        >
-          Node 1.1
-        </TreeViewNode>
-
-        <TreeViewNode
-          value={'1.2'}
-          depth={1}
-        >
-          Node 1.2
-        </TreeViewNode>
-
-        <TreeViewNode
-          value={'1.3'}
-          depth={1}
-        >
-          Node 1.3
-        </TreeViewNode>
-
-        <TreeViewNode
-          value={2}
-          depth={0}
-          leaf
-        >
-          Node 2
-        </TreeViewNode>
-
-        <TreeViewNode
-          value={3}
-          depth={0}
-          leaf
-        >
-          Node 3
-        </TreeViewNode>
+        {flattedTreeNodes.map((node) => {
+          return (
+            <TreeViewNode
+              key={node.key}
+              depth={node.level}
+              value={node.key}
+            >
+              <TreeViewNodeIndicator onClick={handleNodeToggleClick} />
+              <span>{node.originalData.name}</span>
+            </TreeViewNode>
+          )
+        })}
       </TreeView>
 
       <ReactQuery

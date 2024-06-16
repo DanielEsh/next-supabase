@@ -36,6 +36,7 @@ export const TreeView = (props: TreeViewProps) => {
     )
 
     expandedNodeKeyIndex >= 0 ? collapseNode(key) : expandNode(key)
+    console.log('TOGGLE', key)
   }
 
   const value = {

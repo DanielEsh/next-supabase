@@ -5,18 +5,21 @@ import { TreeViewNodeContext } from '@/app/(dashboard)/tree/tree-view-node'
 import { classNames } from '@/shared/utils'
 
 interface TreeViewNodeIndicatorProps {
-  onClick?: () => void
+  onClick?: (value: any) => void
 }
 
-export const TreeViewNodeIndicator = () => {
+export const TreeViewNodeIndicator = (props: TreeViewNodeIndicatorProps) => {
+  const { onClick } = props
   const context = useContext(TreeViewContext)
-  const ctx = useContext(TreeViewNodeContext)
+  const treeViewNodeContext = useContext(TreeViewNodeContext)
   const handleClick = () => {
-    context.onToggleNode(1)
+    if (onClick) {
+      onClick(treeViewNodeContext.value)
+    }
   }
 
   const classes = classNames('icon', {
-    'rotate-90': ctx.expanded,
+    'rotate-90': treeViewNodeContext.expanded,
   })
 
   return (
