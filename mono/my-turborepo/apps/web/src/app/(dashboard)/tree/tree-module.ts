@@ -42,13 +42,10 @@ const getDefaultNodeKey = (node: Object) => {
 }
 
 const getDefaultNodeChildren = (node: Object) => {
-  console.log('getDefaultNodeChildren', node)
-  console.log('RETURN ', node[DEFAULT_NODE_CHILDREN_FIELD_NAME])
   return node[DEFAULT_NODE_CHILDREN_FIELD_NAME] as string
 }
 
 function getDefaultLeaf(node: unknown): Key {
-  console.log('getDefaultLeaf', node)
   if (!getDefaultNodeChildren(node)) {
     return true
   }
