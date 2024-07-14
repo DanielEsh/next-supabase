@@ -91,6 +91,9 @@ export const createTreeNode = (options: CreateTreeNodeOptions) => {
     }
     levelTreeNodeMap.get(level)?.push(treeNode)
 
+    console.log('treeNodeMap', treeNodeMap)
+    console.log('levelTreeNodeMap', levelTreeNodeMap)
+
     return treeNode
   })
 }
