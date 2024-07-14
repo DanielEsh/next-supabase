@@ -1,5 +1,11 @@
 export type Key = string | number
 
+export interface DataTreeNode {
+  key?: Key
+  isLeaf?: boolean
+  children?: DataTreeNode[]
+}
+
 export interface TreeNode<DATA> {
   key: Key
   index: number

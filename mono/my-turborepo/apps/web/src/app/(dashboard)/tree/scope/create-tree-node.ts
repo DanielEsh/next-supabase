@@ -20,7 +20,7 @@ export const createTreeNode = <NODE>(options: CreateTreeNodeOptions<NODE>) => {
     treeNode.data = node
     treeNode.depth = depth
     treeNode.index = index
-    treeNode.parentKey = parent?.key ?? null
+    treeNode.parentKey = parent?.key
     treeNode.isLeaf = getLeaf(node)
 
     if (!treeNode.isLeaf && withChildren) {
