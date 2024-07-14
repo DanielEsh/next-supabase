@@ -39,36 +39,51 @@ const ClientPage = () => {
     {
       id: '1',
       name: 'Node 1',
+      // isLeaf: false,
       children: [
         {
           id: '1.1',
           name: 'Node 1.1',
+          // isLeaf: false,
+          children: [
+            {
+              id: '1.1.1',
+              name: 'Node 1.1.1',
+              // isLeaf: true,
+            },
+          ],
         },
         {
           id: '1.2',
           name: 'Node 1.2',
+          // isLeaf: true,
         },
         {
           id: '1.3',
           name: 'Node 1.3',
+          // isLeaf: true,
         },
       ],
     },
     {
       id: '2',
       name: 'Node 2',
+      // isLeaf: true,
     },
     {
       id: '3',
       name: 'Node 3',
+      // isLeaf: true,
     },
     {
       id: '4',
       name: 'Node 4',
+      // isLeaf: false,
       children: [
         {
           id: '4.1',
           name: 'Node 4.1',
+          // isLeaf: true,
         },
       ],
     },
@@ -77,37 +92,37 @@ const ClientPage = () => {
   const initialTreeStruct2 = [
     {
       value: '1',
-      label: 'Node 1',
+      name: 'Node 1',
       items: [
         {
           value: '1.1',
-          label: 'Node 1.1',
+          name: 'Node 1.1',
         },
         {
           value: '1.2',
-          label: 'Node 1.2',
+          name: 'Node 1.2',
         },
         {
           value: '1.3',
-          label: 'Node 1.3',
+          name: 'Node 1.3',
         },
       ],
     },
     {
       value: '2',
-      label: 'Node 2',
+      name: 'Node 2',
     },
     {
       value: '3',
-      label: 'Node 3',
+      name: 'Node 3',
     },
     {
       value: '4',
-      label: 'Node 4',
+      name: 'Node 4',
       items: [
         {
           value: '4.1',
-          label: 'Node 4.1',
+          name: 'Node 4.1',
         },
       ],
     },
@@ -116,6 +131,14 @@ const ClientPage = () => {
   const { flattedTreeNodes, toggleNode } = useTree(initialTreeStruct)
 
   console.log('FLat', flattedTreeNodes)
+
+  // console.log(
+  //   createTree({
+  //     nodes: initialTreeStruct2,
+  //     getKey: 'value',
+  //     getChildren: 'items',
+  //   }),
+  // )
 
   const handleNodeToggleClick = (value: any) => {
     toggleNode(value)
@@ -133,7 +156,10 @@ const ClientPage = () => {
               depth={node.level}
               value={node.key}
             >
-              <TreeViewNodeIndicator onClick={handleNodeToggleClick} />
+              {!node.isLeaf && (
+                <TreeViewNodeIndicator onClick={handleNodeToggleClick} />
+              )}
+
               <span>{node.originalData.name}</span>
             </TreeViewNode>
           )

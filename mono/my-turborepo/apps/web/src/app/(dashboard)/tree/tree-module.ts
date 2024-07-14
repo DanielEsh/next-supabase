@@ -1,3 +1,5 @@
+import { Key } from '@repo/ui/src/tree/utils/interface'
+
 export type TreeNodeKey = string | number
 
 interface Object {
@@ -26,6 +28,7 @@ interface CreateTreeNodeOptions {
   level?: number
   getKey: GetNodeKey
   getChildren: GetNodeChildren
+  getLeaf: any
 }
 
 const treeNodeMap = new Map()
@@ -39,11 +42,29 @@ const getDefaultNodeKey = (node: Object) => {
 }
 
 const getDefaultNodeChildren = (node: Object) => {
+  console.log('getDefaultNodeChildren', node)
+  console.log('RETURN ', node[DEFAULT_NODE_CHILDREN_FIELD_NAME])
   return node[DEFAULT_NODE_CHILDREN_FIELD_NAME] as string
 }
 
+function getDefaultLeaf(node: unknown): Key {
+  console.log('getDefaultLeaf', node)
+  if (!getDefaultNodeChildren(node)) {
+    return true
+  }
+
+  return (node as any).isLeaf
+}
+
 export const createTreeNode = (options: CreateTreeNodeOptions) => {
-  const { nodes, parent = null, level = 0, getKey, getChildren } = options
+  const {
+    nodes,
+    parent = null,
+    level = 0,
+    getKey,
+    getChildren,
+    getLeaf,
+  } = options
   return nodes.map((node, index) => {
     const treeNode = {} as ITreeNode
     const withChildren = getChildren(node)?.length
@@ -53,7 +74,7 @@ export const createTreeNode = (options: CreateTreeNodeOptions) => {
     treeNode.level = level
     treeNode.index = index
     treeNode.parentKey = parent?.key ?? null
-    treeNode.isLeaf = node.leaf
+    treeNode.isLeaf = getLeaf(node)
 
     if (!treeNode.isLeaf && withChildren) {
       treeNode.isLeaf = false
@@ -63,6 +84,7 @@ export const createTreeNode = (options: CreateTreeNodeOptions) => {
         level: level + 1,
         getKey,
         getChildren,
+        getLeaf,
       })
     }
 
@@ -105,6 +127,7 @@ export function createTree(params: CreateTreeNodeOptions) {
     level,
     getKey: getNodeKey,
     getChildren: getNodeChildren,
+    getLeaf: getDefaultLeaf,
   })
 }
 
