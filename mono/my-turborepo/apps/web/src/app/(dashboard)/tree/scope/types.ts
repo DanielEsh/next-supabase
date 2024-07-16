@@ -16,22 +16,24 @@ export interface TreeNode<DATA> {
   data: DATA
 }
 
-type GetNodeKeyFn<NODE> = (node: NODE) => Key
-type GetNodeKey<NODE> = Key | GetNodeKeyFn<NODE>
+export interface RenderTreeNode<DATA> extends TreeNode<DATA> {
+  expanded: boolean
+}
 
-type GetNodeChildrenFn<NODE> = (node: NODE) => NODE[]
+export type GetNodeKeyFn = (node: DataTreeNode | unknown) => Key
+type GetNodeKey = Key | GetNodeKeyFn
+
+export type GetNodeChildrenFn<NODE> = (node: DataTreeNode | unknown) => NODE[]
 type GetNodeChildren<NODE> = NODE[] | GetNodeChildrenFn<NODE>
 
-type GetLeafFn<NODE> = (node: NODE) => boolean
-type GetLeaf<NODE> = boolean | GetLeafFn<NODE>
-
-export type TreeNodeMap<NODE> = Record<Key, TreeNode<NODE>>
+type GetLeafFn = (node: DataTreeNode) => boolean
+type GetLeaf = boolean | GetLeafFn
 
 export interface CreateTreeNodeOptions<NODE> {
   nodes: NODE[]
   parent?: TreeNode<NODE>
   depth?: number
-  getKey: GetNodeKey<NODE>
+  getKey: GetNodeKey
   getChildren: GetNodeChildren<NODE>
-  getLeaf: GetLeaf<NODE>
+  getLeaf: GetLeaf
 }

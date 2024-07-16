@@ -2,29 +2,55 @@ import { createTreeNode } from './create-tree-node'
 import { getDefaultLeaf } from './get-default-leaf'
 import { getDefaultNodeChildren } from './get-default-node-children'
 import { getDefaultNodeKey } from './get-default-node-key'
-import type { CreateTreeNodeOptions } from './types'
+import type {
+  Key,
+  CreateTreeNodeOptions,
+  GetNodeKeyFn,
+  GetNodeChildrenFn,
+} from './types'
+import { isObject } from './utils/isObject'
 
 export function createTree<DATA>(params: CreateTreeNodeOptions<DATA>) {
   const { nodes, parent, depth, getKey, getChildren } = params
 
-  const getNodeKey = (node: any) => {
-    if (!getKey) return getDefaultNodeKey(node)
+  const getNodeKey: GetNodeKeyFn = (node: unknown): Key => {
+    if (!isObject(node)) {
+      throw new Error('Node should be object')
+    }
+
+    if (!getKey) {
+      return getDefaultNodeKey(node)
+    }
 
     if (typeof getKey === 'string') {
-      return node[params.getKey]
+      return node[getKey] as Key
     }
 
-    return getKey(node)
+    if (typeof getKey === 'function') {
+      return getKey(node)
+    }
+
+    throw new Error('getKey should be either a string or a function')
   }
 
-  const getNodeChildren = (node: Object) => {
-    if (!getChildren) return getDefaultNodeChildren(node)
-
-    if (typeof getChildren === 'string') {
-      return node[params.getChildren]
+  const getNodeChildren: GetNodeChildrenFn<DATA> = (node: unknown) => {
+    if (!isObject(node)) {
+      throw new Error('Node should be object')
     }
 
-    return getChildren(node)
+    if (!getChildren) {
+      return getDefaultNodeChildren(node) as DATA[]
+    }
+
+    if (typeof getChildren === 'string') {
+      return node[getChildren] as DATA[]
+    }
+
+    if (typeof getChildren === 'function') {
+      return getChildren(node)
+    }
+
+    throw new Error('getChildren should be either a string or a function')
   }
 
   return createTreeNode({
