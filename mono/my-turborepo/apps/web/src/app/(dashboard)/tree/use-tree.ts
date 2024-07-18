@@ -4,7 +4,7 @@ import {
   createTree,
   getFlattenedRenderTree,
   getNode,
-} from '@/app/(dashboard)/tree/tree-module'
+} from '@/app/(dashboard)/tree/scope'
 
 export function useTree(initialData: any) {
   const [internalExpandedValue, setInternalExpandedValue] = useState<

@@ -153,14 +153,15 @@ const ClientPage = () => {
           return (
             <TreeViewNode
               key={node.key}
-              depth={node.level}
+              depth={node.depth}
               value={node.key}
+              expanded={node.expanded}
             >
               {!node.isLeaf && (
                 <TreeViewNodeIndicator onClick={handleNodeToggleClick} />
               )}
 
-              <span>{node.originalData.name}</span>
+              <span>{node.data.name}</span>
             </TreeViewNode>
           )
         })}
