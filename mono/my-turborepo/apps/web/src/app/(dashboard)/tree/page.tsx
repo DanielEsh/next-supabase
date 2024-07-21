@@ -17,6 +17,7 @@ import {
 import { TreeUpdateForm } from '@/app/(dashboard)/tree/tree-update-form'
 import { TreeView } from '@/app/(dashboard)/tree/tree-view'
 import { TreeViewNode } from '@/app/(dashboard)/tree/tree-view-node'
+import { TreeViewNodeIndent } from '@/app/(dashboard)/tree/tree-view-node-indent'
 import { TreeViewNodeIndicator } from '@/app/(dashboard)/tree/tree-view-node-indicator'
 import { useTree } from '@/app/(dashboard)/tree/use-tree'
 import { ReactQuery } from '@/components/ReactQuery'
@@ -156,7 +157,9 @@ const ClientPage = () => {
               depth={node.depth}
               value={node.key}
               expanded={node.expanded}
+              leaf={node.isLeaf}
             >
+              <TreeViewNodeIndent depth={node.depth} />
               {!node.isLeaf && (
                 <TreeViewNodeIndicator onClick={handleNodeToggleClick} />
               )}

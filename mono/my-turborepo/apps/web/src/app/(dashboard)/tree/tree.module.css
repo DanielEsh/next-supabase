@@ -1,5 +1,5 @@
 .tree {
     --depth: 0;
 
-    padding-inline-start: calc(((var(--depth) - 1)* 24px) + 24px);
+    /*padding-inline-start: calc(((var(--depth) - 1)* 24px) + 24px);*/
 }
