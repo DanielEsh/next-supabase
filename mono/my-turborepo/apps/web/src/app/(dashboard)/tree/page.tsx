@@ -30,6 +30,8 @@ import {
 import { Input } from '@/shared/ui'
 import { Form } from '@/shared/ui/form'
 
+import classes from './tree.module.css'
+
 const ClientPage = () => {
   const usersQuery = useTreeQuery()
   const queryClient = useQueryClient()
@@ -150,24 +152,28 @@ const ClientPage = () => {
       <p>Users list</p>
 
       <TreeView expandedValue={[1, 2, 3]}>
-        {flattedTreeNodes.map((node) => {
-          return (
-            <TreeViewNode
-              key={node.key}
-              depth={node.depth}
-              value={node.key}
-              expanded={node.expanded}
-              leaf={node.isLeaf}
-            >
-              <TreeViewNodeIndent depth={node.depth} />
-              {!node.isLeaf && (
-                <TreeViewNodeIndicator onClick={handleNodeToggleClick} />
-              )}
+        <div className={classes.treeRoot}>
+          {flattedTreeNodes.map((node) => {
+            return (
+              <TreeViewNode
+                key={node.key}
+                depth={node.depth}
+                value={node.key}
+                expanded={node.expanded}
+                leaf={node.isLeaf}
+              >
+                <TreeViewNodeIndent depth={node.depth} />
+                {!node.isLeaf ? (
+                  <TreeViewNodeIndicator onClick={handleNodeToggleClick} />
+                ) : (
+                  <div className="h-6 w-6" />
+                )}
 
-              <span>{node.data.name}</span>
-            </TreeViewNode>
-          )
-        })}
+                <span>{node.data.name}</span>
+              </TreeViewNode>
+            )
+          })}
+        </div>
       </TreeView>
 
       {/*<ReactQuery*/}

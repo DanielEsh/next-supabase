@@ -1,5 +1,25 @@
+.treeRoot {
+
+}
+
 .tree {
     --depth: 0;
 
     /*padding-inline-start: calc(((var(--depth) - 1)* 24px) + 24px);*/
+}
+
+.treeIndent {
+    --ant-color-border: #d9d9d9;
+    --ant-padding-xs: 8px;
+    --ant-tree-title-height: 24px;
+    position: relative;
+}
+
+.treeIndent:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    inset-inline-end: calc(var(--ant-tree-title-height) / 2);
+    bottom: 0;
+    border-inline-end: 1px solid var(--ant-color-border);
 }

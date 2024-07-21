@@ -27,7 +27,7 @@ export const TreeViewNode = (props: TreeViewNodeProps) => {
   const { children, depth, value, leaf = false, expanded = false } = props
 
   const classes = classNames('flex items-center', styles.tree, {
-    'pl-[24px]': leaf,
+    '': leaf,
   })
 
   const contextValue = {

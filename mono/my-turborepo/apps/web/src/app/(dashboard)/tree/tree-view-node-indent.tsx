@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import classes from './tree.module.css'
+
 interface TreeViewNodeIndent {
   depth: number
 }
@@ -10,7 +12,7 @@ export const TreeViewNodeIndent = ({ depth }: TreeViewNodeIndent) => {
     list.push(
       <div
         key={i}
-        className="w-6 h-6"
+        className={`${classes.treeIndent} w-6 h-6`}
       />,
     )
   }
