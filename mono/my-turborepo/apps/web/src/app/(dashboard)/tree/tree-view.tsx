@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import { createContext, useState } from 'react'
 
+import { useTree } from '@/app/(dashboard)/tree/use-tree'
+
 interface TreeViewContent {}
 
 export const TreeViewContext = createContext<TreeViewContent>({})

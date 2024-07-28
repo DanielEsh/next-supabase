@@ -14,7 +14,7 @@ export const createTreeNode = <NODE>(options: CreateTreeNodeOptions<NODE>) => {
   } = options
   return nodes.map((node, index) => {
     const treeNode = {} as TreeNode<NODE>
-    const children = getChildren(node)
+    const children = getChildren(node) ?? []
 
     treeNode.key = getKey(node)
     treeNode.data = node
@@ -23,7 +23,7 @@ export const createTreeNode = <NODE>(options: CreateTreeNodeOptions<NODE>) => {
     treeNode.parentKey = parent?.key
     treeNode.isLeaf = getLeaf(node)
 
-    if (!treeNode.isLeaf && children.length) {
+    if (!treeNode.isLeaf || children.length) {
       treeNode.isLeaf = false
       treeNode.children = createTreeNode({
         nodes: children,

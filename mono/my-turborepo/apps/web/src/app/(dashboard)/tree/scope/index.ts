@@ -1,4 +1,5 @@
 export { createTree } from './create-tree'
+export { createTreeNode } from './create-tree-node'
 export { getFlattenedRenderTree } from './get-flattened-render-tree'
 export { getNode, getParent } from './create-tree-node'
 export type { Key, TreeNode } from './types'
