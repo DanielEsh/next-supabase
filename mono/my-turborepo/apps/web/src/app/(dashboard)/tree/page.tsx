@@ -133,24 +133,8 @@ const ClientPage = () => {
           const [loadingKeys, setLoadingsKeys] = useState(new Set<number>())
           const [selectedValue, setSelectedValue] = useState()
 
-          const transformData = (data) => {
-            return data.map((item) => {
-              return {
-                ...item,
-                children: [],
-              }
-            })
-          }
-
-          const transformedData = tree.map((item) => {
-            return {
-              ...item,
-              children: [],
-            }
-          })
-
           const treeData = createTree({
-            nodes: transformedData,
+            nodes: tree,
             getKey: 'id',
             getLeaf: 'leaf',
           })
@@ -193,11 +177,17 @@ const ClientPage = () => {
               queryFn: () => getTreeChildren(key),
             })
 
-            const nestedChildren = createTreeNode({
-              nodes: transformData(data),
+            console.log('DATA', data)
+
+            const nestedChildren = createTree({
+              nodes: data,
               parent: parentNode,
               depth: parentNode?.depth + 1,
+              getKey: 'id',
+              getLeaf: 'leaf',
             })
+
+            console.log('nestedChildren', nestedChildren)
 
             parentNode.isLeaf = false
             parentNode.children = nestedChildren
@@ -278,23 +268,31 @@ const ClientPage = () => {
               <TreeUpdateForm parentId={selectedValue} />
               {selectedValue && <TreeDeleteButton id={selectedValue} />}
 
-              {flattedNodes.map((item) => {
-                return (
-                  <TreeNode
-                    key={item.key}
-                    level={item.level}
-                    leaf={item.isLeaf}
-                    node={item}
-                    expanded={item.expanded}
-                    selected={item.key === selectedValue}
-                    loading={loadingKeys.has(item.key)}
-                    onClick={() => handleClick(item.key)}
-                    onToggle={handleToggle}
-                  >
-                    {item.data.name}
-                  </TreeNode>
-                )
-              })}
+              <TreeView>
+                {flattedNodes.map((item) => {
+                  return (
+                    <TreeViewNode
+                      key={item.key}
+                      depth={item.depth}
+                      leaf={item.isLeaf}
+                      expanded={item.expanded}
+                    >
+                      <TreeViewNodeIndent depth={item.depth} />
+                      {loadingKeys.has(item.key) && <div>Loading...</div>}
+
+                      {!item.isLeaf ? (
+                        <TreeViewNodeIndicator
+                          onClick={() => handleToggle(item.key, item.expanded)}
+                        />
+                      ) : (
+                        <div className="h-6 w-6" />
+                      )}
+
+                      <span>{item.data.name}</span>
+                    </TreeViewNode>
+                  )
+                })}
+              </TreeView>
             </>
           )
         }}

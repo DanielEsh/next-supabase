@@ -11,7 +11,7 @@ import type {
 import { isObject } from './utils/isObject'
 
 export function createTree<DATA>(params: CreateTreeNodeOptions<DATA>) {
-  const { nodes, parent, depth, getKey, getChildren } = params
+  const { nodes, parent, depth, getKey, getChildren, getLeaf } = params
 
   const getNodeKey: GetNodeKeyFn = (node: unknown): Key => {
     if (!isObject(node)) {
@@ -53,12 +53,32 @@ export function createTree<DATA>(params: CreateTreeNodeOptions<DATA>) {
     throw new Error('getChildren should be either a string or a function')
   }
 
+  const getLeafField: GetNodeKeyFn = (node: unknown): boolean => {
+    if (!isObject(node)) {
+      throw new Error('Node should be object')
+    }
+
+    if (!getLeaf) {
+      return getDefaultLeaf(node)
+    }
+
+    if (typeof getLeaf === 'string') {
+      return node[getLeaf] as boolean
+    }
+
+    if (typeof getLeaf === 'function') {
+      return getLeaf(node)
+    }
+
+    throw new Error('getLeaf should be either a string or a function')
+  }
+
   return createTreeNode({
     nodes,
     parent,
     depth,
     getKey: getNodeKey,
     getChildren: getNodeChildren,
-    getLeaf: getDefaultLeaf,
+    getLeaf: getLeafField,
   })
 }
