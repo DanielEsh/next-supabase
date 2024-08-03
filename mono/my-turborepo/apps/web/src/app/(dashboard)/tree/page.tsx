@@ -276,6 +276,7 @@ const ClientPage = () => {
                       depth={item.depth}
                       leaf={item.isLeaf}
                       expanded={item.expanded}
+                      onClick={() => handleClick(item.key)}
                     >
                       <TreeViewNodeIndent depth={item.depth} />
                       {loadingKeys.has(item.key) && <div>Loading...</div>}
@@ -287,7 +288,6 @@ const ClientPage = () => {
                       ) : (
                         <div className="h-6 w-6" />
                       )}
-
                       <span>{item.data.name}</span>
                     </TreeViewNode>
                   )

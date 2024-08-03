@@ -59,45 +59,75 @@ export class TreeService {
     }));
   }
 
-  async getChildren(id: number): Promise<any> {
-    const parent = await this.treeRepository.findOne({
-      where: {
-        id,
-      },
+  // async getTree(): Promise<any> {
+  //   return await this.treeRepository.findTrees();
+  // }
+
+  async getChildren(parentId: number): Promise<any> {
+    const parentNode = await this.treeRepository.findOne({
+      where: { id: parentId },
       relations: ['children'],
     });
-    if (!parent) {
-      throw new NotFoundException(`Node with id ${id} not found`);
+    if (!parentNode) {
+      throw new Error('Parent node not found');
     }
-    //
-    const descendants = await this.treeRepository.findDescendants(parent);
 
-    // // Remove the parent node from the descendants
-    const filteredDescendants = descendants.filter(
-      (descendant) => descendant.id !== parent.id,
+    const descendantsChildren = await this.treeRepository.findDescendants(
+      parentNode,
+      { relations: ['children'] },
     );
 
-    // Get children count for each descendant
-    const descendantIds = filteredDescendants.map((desc) => desc.id);
-    const childrenCounts = await this.treeRepository
-      .createQueryBuilder('tree')
-      .leftJoin('tree.children', 'children')
-      .where('tree.id IN (:...descendantIds)', { descendantIds })
-      .select('tree.id', 'id')
-      .addSelect('COUNT(children.id)', 'childrenCount')
-      .groupBy('tree.id')
-      .getRawMany();
-
-    const nodeChildrenCount = childrenCounts.reduce(
-      (acc, { id, childrenCount }) => {
-        acc[id] = parseInt(childrenCount, 10);
-        return acc;
-      },
-      {},
+    const filteredDescendants = descendantsChildren.filter(
+      (descendant) => descendant.parentId === parentNode.id,
     );
 
-    return this.toTreeDto(filteredDescendants, nodeChildrenCount);
+    return filteredDescendants.map((item) => ({
+      id: item.id,
+      name: item.name,
+      parentId: item.parentId,
+      leaf: !Boolean(item.children.length),
+    }));
   }
+
+  // async getChildren(id: number): Promise<any> {
+  //   const parent = await this.treeRepository.findOne({
+  //     where: {
+  //       id,
+  //     },
+  //     relations: ['children'],
+  //   });
+  //   if (!parent) {
+  //     throw new NotFoundException(`Node with id ${id} not found`);
+  //   }
+  //   //
+  //   const descendants = await this.treeRepository.findDescendants(parent);
+  //
+  //   // // Remove the parent node from the descendants
+  //   const filteredDescendants = descendants.filter(
+  //     (descendant) => descendant.id !== parent.id,
+  //   );
+  //
+  //   // Get children count for each descendant
+  //   const descendantIds = filteredDescendants.map((desc) => desc.id);
+  //   const childrenCounts = await this.treeRepository
+  //     .createQueryBuilder('tree')
+  //     .leftJoin('tree.children', 'children')
+  //     .where('tree.id IN (:...descendantIds)', { descendantIds })
+  //     .select('tree.id', 'id')
+  //     .addSelect('COUNT(children.id)', 'childrenCount')
+  //     .groupBy('tree.id')
+  //     .getRawMany();
+  //
+  //   const nodeChildrenCount = childrenCounts.reduce(
+  //     (acc, { id, childrenCount }) => {
+  //       acc[id] = parseInt(childrenCount, 10);
+  //       return acc;
+  //     },
+  //     {},
+  //   );
+  //
+  //   return this.toTreeDto(filteredDescendants, nodeChildrenCount);
+  // }
 
   async createTreeNode(name: string, parentId?: number): Promise<TreeEntity> {
     const newNode = new TreeEntity();

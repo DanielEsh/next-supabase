@@ -24,7 +24,14 @@ interface TreeViewNodeProps {
 }
 
 export const TreeViewNode = (props: TreeViewNodeProps) => {
-  const { children, depth, value, leaf = false, expanded = false } = props
+  const {
+    children,
+    depth,
+    value,
+    leaf = false,
+    expanded = false,
+    ...restProps
+  } = props
 
   const classes = classNames('flex items-center', styles.tree, {
     '': leaf,
@@ -47,6 +54,7 @@ export const TreeViewNode = (props: TreeViewNodeProps) => {
           } as CSSProperties
         }
         className={classes}
+        {...restProps}
       >
         {children}
       </div>
